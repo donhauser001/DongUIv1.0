@@ -1,0 +1,14 @@
+{
+  "name": "dong-fullstack-template",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r run dev",
+    "build": "pnpm -r run build",
+    "start:db": "docker-compose up -d"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
+

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # PostgreSQL with pgvector support
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: dong_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-dong_password_123}
+      POSTGRES_DB: ${DB_NAME:-dong_db}
+    ports:
+      - "54320:5432" # 宿主机 54320 -> 容器 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  # Redis for Caching / Queues
+  redis:
+    image: redis:alpine
+    container_name: dong_redis
+    ports:
+      - "56379:6379" # 宿主机 56379 -> 容器 6379
+    volumes:
+      - redis_data:/data
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:

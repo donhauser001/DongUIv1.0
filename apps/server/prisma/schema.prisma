@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"] // 启用 PG 扩展功能
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector] // 启用 pgvector 扩展
+}
+
+// 用户表 - 基础 RBAC 准备
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// AI 知识库文档表 - 核心高并发/AI 场景
+model Document {
+  id        String                 @id @default(uuid())
+  content   String                 // 原始文本内容
+  metadata  Json?                  // 灵活的 JSONB 字段，存元数据
+  embedding Unsupported("vector")? // ★ AI 向量字段，直接存 Embedding
+  
+  createdAt DateTime @default(now())
+
+  @@index([embedding]) // 为向量字段建立索引，加速相似度搜索
+}
+
+// 新增：系统配置表
+model SystemConfig {
+  id          String   @id @default(uuid())
+  key         String   @unique // 配置键，例如 "theme_config"
+  value       Json     // 配置内容，存储完整的 themeConfig 对象
+  description String?
+  updatedAt   DateTime @updatedAt
+}

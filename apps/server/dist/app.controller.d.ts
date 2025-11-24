@@ -1,0 +1,11 @@
+import { PrismaService } from './prisma/prisma.service';
+export declare class AppController {
+    private readonly prisma;
+    constructor(prisma: PrismaService);
+    getHello(): string;
+    getStatus(): Promise<{
+        status: string;
+        database: string;
+        userCount: number;
+    }>;
+}

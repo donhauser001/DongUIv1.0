@@ -1,0 +1,411 @@
+/* Common Grid Layouts */
+.grid-5 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 1536px) {
+    .grid-5 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 1280px) {
+    .grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 1280px) {
+    .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+    .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Common Card Style in Gallery */
+.stat-card,
+.info-card,
+.preview-card {
+    background-color: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.stat-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+}
+
+.stat-val {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.trend-pos {
+    color: #00cf3f;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.trend-neg {
+    color: #ef4444;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* New class for larger spacing between setting items */
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Settings Item - 单个设置项的容器 */
+.settings-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Settings Subsection - 子分组 */
+.settings-subsection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background-color: #f9fafb;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+/* Subsection Label - 子标题 */
+.subsection-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    font-size: 0.875rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.form-color-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.color-preview {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    padding: 0;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background: none;
+    overflow: hidden;
+}
+
+.color-preview::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-preview::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+.color-preview::-moz-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+.color-text {
+    flex: 1;
+}
+
+.logo-preview {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+}
+
+.table-wrapper {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.table-wrapper th {
+    text-align: left;
+    padding: 0.5rem 0;
+    color: #6b7280;
+    font-weight: normal;
+}
+
+.table-wrapper td {
+    padding: 0.75rem 0;
+    border-top: 1px dashed var(--color-border);
+}
+
+.status-pill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    font-size: 0.75rem;
+}
+
+.status-pill.active {
+    color: #00cf3f;
+    border-color: #00cf3f;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    border: 1px dashed var(--color-border);
+    border-radius: 1.5rem;
+    padding: 1rem;
+}
+
+.timeline-time {
+    font-size: 0.875rem;
+    font-weight: 600;
+    width: 3rem;
+}
+
+.section-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Nav Title Reuse */
+.nav-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Tab Styles */
+.tab-group {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    background-color: #f3f4f6;
+    border-radius: 9999px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: #374151;
+}
+
+.tab-btn.active {
+    background-color: #ffffff;
+    color: var(--color-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.sub-tab-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.sub-tab-btn {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.2s;
+}
+
+.sub-tab-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.sub-tab-btn.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
+}
+
+/* Section Title - 增强视觉层次 */
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 2rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+}
+
+.section-title:first-child {
+    margin-top: 0;
+}
+
+/* Preview Styles */
+.preview-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.preview-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.preview-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Fade In Animation */
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Settings Section Card - 统一的设置组样式 */
+.settings-section-card {
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+}
+
+.settings-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.settings-section-title {
+    font-weight: 600;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+}
+
+.settings-section-desc {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.settings-section-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.settings-field-label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
