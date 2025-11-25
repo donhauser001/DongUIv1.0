@@ -409,10 +409,10 @@ onMounted(() => {
 }
 
 .system-badge {
-  font-size: 0.625rem;
-  font-weight: 500;
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.25rem;
+  font-size: var(--font-size-xs, 0.625rem);
+  font-weight: var(--font-weight-medium, 500);
+  padding: var(--spacing-xs, 0.125rem) var(--spacing-xs, 0.375rem);
+  border-radius: calc(var(--radius) * 0.5);
   background: color-mix(in srgb, var(--color-info), white 90%);
   color: var(--color-info);
 }

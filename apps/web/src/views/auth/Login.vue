@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 px-4">
+  <div class="min-h-screen flex items-center justify-center bg-gradient px-4">
     <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
       <!-- Logo和标题 -->
       <div class="text-center mb-8">
@@ -19,7 +19,7 @@
             v-model="form.email"
             type="email"
             required
-            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+            class="input-base w-full"
             placeholder="your@email.com"
           />
         </div>
@@ -34,13 +34,13 @@
             v-model="form.password"
             type="password"
             required
-            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+            class="input-base w-full"
             placeholder="••••••••"
           />
         </div>
 
         <!-- 错误提示 -->
-        <div v-if="error" class="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+        <div v-if="error" class="error-alert">
           {{ error }}
         </div>
 
@@ -48,7 +48,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="btn-primary w-full"
         >
           <span v-if="!loading">登录</span>
           <span v-else>登录中...</span>
@@ -118,4 +118,21 @@ function showRegister() {
   alert('注册功能开发中...')
 }
 </script>
+
+<style scoped>
+.error-alert {
+  padding: 0.75rem;
+  background-color: color-mix(in srgb, var(--color-error) 10%, white 90%);
+  border: var(--border-width) solid color-mix(in srgb, var(--color-error) 30%, white 70%);
+  border-radius: var(--radius);
+  color: var(--color-error);
+  font-size: 0.875rem;
+}
+
+.input-base:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-primary);
+}
+</style>
 

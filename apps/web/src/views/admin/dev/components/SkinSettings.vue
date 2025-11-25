@@ -428,22 +428,29 @@ watch(() => props.config?.colors?.primary, (newPrimary) => {
 
 <style scoped>
 .scheme-btn {
-  background-color: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: 1.5rem;
-  padding: 1.25rem;
+  background-color: var(--card-bg-color, var(--color-bg-primary));
+  border: var(--card-border-width, var(--border-width)) solid var(--card-border-color, var(--color-border));
+  border-radius: var(--card-radius, var(--radius));
+  padding: var(--card-padding, 1.25rem);
   text-align: left;
-  transition: box-shadow 0.2s;
+  transition: all 0.2s;
   cursor: pointer;
   display: block;
   width: 100%;
+  box-shadow: var(--card-shadow, none);
 }
-.scheme-btn:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-.scheme-active { box-shadow: 0 0 0 2px var(--color-primary); }
+.scheme-btn:hover { 
+  box-shadow: var(--card-hover-shadow, var(--shadow-md)); 
+  border-color: var(--card-hover-border-color, var(--color-primary));
+}
+.scheme-active { 
+  box-shadow: 0 0 0 calc(var(--card-border-width, var(--border-width)) * 2) var(--color-primary); 
+  border-color: var(--color-primary);
+}
 .scheme-header { display: flex; justify-content: space-between; align-items: flex-start; }
-.scheme-name { font-weight: 600; color: #111827; }
-.scheme-desc { font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; }
-.scheme-tag { font-size: 0.75rem; color: var(--color-secondary); padding: 0.25rem 0.75rem; border-radius: 9999px; border: 1px solid var(--color-secondary); }
-.scheme-colors { display: flex; gap: 0.5rem; margin-top: 1rem; }
-.color-dot { flex: 1; height: 2rem; border-radius: 9999px; border: 1px solid rgba(255,255,255,0.5); }
+.scheme-name { font-weight: var(--font-weight-semibold, 600); color: var(--color-text-primary); }
+.scheme-desc { font-size: var(--font-size-sm, 0.75rem); color: var(--color-text-secondary); margin-top: var(--spacing-xs, 0.25rem); }
+.scheme-tag { font-size: var(--font-size-sm, 0.75rem); color: var(--color-secondary); padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.75rem); border-radius: 9999px; border: var(--border-width, 1px) solid var(--color-secondary); }
+.scheme-colors { display: flex; gap: var(--spacing-sm, 0.5rem); margin-top: var(--spacing-md, 1rem); }
+.color-dot { flex: 1; height: var(--spacing-xl, 2rem); border-radius: 9999px; border: var(--border-width, 1px) solid color-mix(in srgb, var(--color-bg-primary) 50%, transparent 50%); }
 </style>

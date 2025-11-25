@@ -112,7 +112,7 @@ onUnmounted(() => {
   background: transparent;
   color: var(--action-menu-trigger-color, var(--color-text-secondary));
   cursor: pointer;
-  border-radius: 0.375rem;
+  border-radius: var(--radius, 0.375rem);
   transition: all 0.2s ease;
 }
 
@@ -127,7 +127,7 @@ onUnmounted(() => {
 }
 
 .action-menu-trigger span {
-  font-size: 1.25rem;
+  font-size: var(--font-h3-size, 1.25rem);
 }
 
 .action-menu-dropdown {
@@ -135,11 +135,11 @@ onUnmounted(() => {
   z-index: 1000;
   min-width: 10rem;
   background-color: var(--action-menu-bg, var(--color-bg-primary));
-  border: 1px solid var(--action-menu-border, var(--color-border));
-  border-radius: var(--action-menu-radius, 0.5rem);
-  box-shadow: var(--action-menu-shadow, 0 4px 12px rgba(0, 0, 0, 0.1));
-  padding: var(--action-menu-padding, 0.25rem);
-  margin-top: 0.25rem;
+  border: var(--border-width, 1px) solid var(--action-menu-border, var(--color-border));
+  border-radius: var(--action-menu-radius, var(--radius));
+  box-shadow: var(--action-menu-shadow, var(--shadow-md));
+  padding: var(--action-menu-padding, var(--spacing-xs));
+  margin-top: var(--spacing-xs, 0.25rem);
 }
 
 /* 位置变体 */
@@ -157,30 +157,30 @@ onUnmounted(() => {
   bottom: 100%;
   right: 0;
   margin-top: 0;
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--spacing-xs, 0.25rem);
 }
 
 .action-menu-dropdown.placement-top-start {
   bottom: 100%;
   left: 0;
   margin-top: 0;
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--spacing-xs, 0.25rem);
 }
 
 .menu-item {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--spacing-sm, 0.75rem);
   padding: var(--action-menu-item-padding, 0.625rem 0.875rem);
   border: none;
   background: transparent;
   color: var(--action-menu-item-color, var(--color-text-primary));
-  font-size: var(--action-menu-item-font-size, 0.875rem);
-  font-weight: var(--action-menu-item-font-weight, 400);
+  font-size: var(--action-menu-item-font-size, var(--font-body-size));
+  font-weight: var(--action-menu-item-font-weight, var(--font-weight-normal));
   text-align: left;
   cursor: pointer;
-  border-radius: 0.375rem;
+  border-radius: var(--radius, 0.375rem);
   transition: all 0.2s ease;
   white-space: nowrap;
 }
@@ -190,21 +190,21 @@ onUnmounted(() => {
 }
 
 .menu-item.disabled {
-  opacity: 0.5;
+  opacity: var(--opacity-50, 0.5);
   cursor: not-allowed;
 }
 
 .menu-item.danger {
-  color: var(--action-menu-item-danger-color, #ef4444);
+  color: var(--action-menu-item-danger-color, var(--color-error));
 }
 
 .menu-item.danger:hover:not(.disabled) {
-  background-color: var(--action-menu-item-danger-hover-bg, #fef2f2);
-  color: var(--action-menu-item-danger-color, #dc2626);
+  background-color: var(--action-menu-item-danger-hover-bg, color-mix(in srgb, var(--color-error) 10%, white 90%));
+  color: var(--action-menu-item-danger-color, color-mix(in srgb, var(--color-error) 90%, black 10%));
 }
 
 .menu-item-icon {
-  font-size: 1rem;
+  font-size: var(--font-size-base, 1rem);
   flex-shrink: 0;
 }
 
@@ -213,9 +213,9 @@ onUnmounted(() => {
 }
 
 .menu-divider {
-  height: 1px;
+  height: var(--border-width, 1px);
   background-color: var(--color-border);
-  margin: 0.25rem 0;
+  margin: var(--spacing-xs, 0.25rem) 0;
 }
 
 /* 过渡动画 */
@@ -226,12 +226,12 @@ onUnmounted(() => {
 
 .menu-fade-enter-from {
   opacity: 0;
-  transform: translateY(-0.5rem);
+  transform: translateY(calc(-1 * var(--spacing-sm, 0.5rem)));
 }
 
 .menu-fade-leave-to {
   opacity: 0;
-  transform: translateY(-0.5rem);
+  transform: translateY(calc(-1 * var(--spacing-sm, 0.5rem)));
 }
 
 .menu-fade-enter-to,

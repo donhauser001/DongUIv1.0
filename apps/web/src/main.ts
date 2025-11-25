@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import './style.css'
+import './styles/utilities.css' // 基于CSS变量的工具类库
 import 'virtual:uno.css'
 // 移除 @unocss/reset/tailwind.css - 我们使用自己的可控 reset
 import router from './router' // 引入路由

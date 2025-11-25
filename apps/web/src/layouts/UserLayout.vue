@@ -134,9 +134,9 @@ const footerLogoUrl = computed(() => {
 }
 
 .logo-wrapper {
-  width: 1.5rem;
-  height: 1.5rem;
-  /* margin-right: 0.5rem; Removed default margin */
+  width: var(--spacing-lg, 1.5rem);
+  height: var(--spacing-lg, 1.5rem);
+  /* margin-right: var(--spacing-sm, 0.5rem); Removed default margin */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,15 +150,15 @@ const footerLogoUrl = computed(() => {
 }
 
 .logo-placeholder {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--spacing-lg, 1.5rem);
+  height: var(--spacing-lg, 1.5rem);
   border-radius: var(--radius);
   background-color: var(--color-primary);
-  /* margin-right: 0.5rem; Removed default margin */
+  /* margin-right: var(--spacing-sm, 0.5rem); Removed default margin */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-text-inverse, #fff);
   flex-shrink: 0;
 }
 
@@ -179,14 +179,14 @@ const footerLogoUrl = computed(() => {
 }
 
 .brand-tagline {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   color: var(--color-text-secondary);
-  margin-top: 0.125rem;
+  margin-top: var(--spacing-xs, 0.125rem);
 }
 
 .nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: var(--spacing-lg, 1.5rem);
 }
 
 .nav-link {
@@ -203,21 +203,21 @@ const footerLogoUrl = computed(() => {
 
 .small-btn {
   font-size: var(--font-size-sm);
-  padding: 0.375rem 0.75rem;
+  padding: var(--spacing-xs, 0.375rem) var(--spacing-sm, 0.75rem);
   height: auto;
 }
 
 .footer {
-  padding: 2rem;
+  padding: var(--spacing-xl, 2rem);
   text-align: center;
   color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
   border-top: var(--border-width) solid var(--color-border);
-  margin-top: 3rem;
+  margin-top: var(--spacing-3xl, 3rem);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-md, 1rem);
 }
 
 .footer-brand {
@@ -226,8 +226,8 @@ const footerLogoUrl = computed(() => {
 }
 
 .footer-logo {
-  height: 2rem;
-  opacity: 0.8;
+  height: var(--spacing-xl, 2rem);
+  opacity: var(--opacity-80, 0.8);
 }
 
 .main-content {

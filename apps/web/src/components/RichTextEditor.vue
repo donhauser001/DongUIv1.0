@@ -589,10 +589,10 @@ defineExpose({
 
 .richtext-toolbar {
   display: flex;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  background-color: var(--richtext-toolbar-bg-color, #f9fafb);
-  border-bottom: 1px solid var(--richtext-toolbar-border-color, #e5e7eb);
+  gap: var(--spacing-xs, 0.25rem);
+  padding: var(--spacing-sm, 0.5rem);
+  background-color: var(--richtext-toolbar-bg-color, var(--color-gray-50));
+  border-bottom: var(--border-width, 1px) solid var(--richtext-toolbar-border-color, var(--color-gray-200));
   align-items: center;
   flex-wrap: wrap;
 }
@@ -601,16 +601,16 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;
-  height: 2rem;
-  padding: 0 0.375rem;
-  border: 1px solid transparent;
+  min-width: var(--spacing-xl, 2rem);
+  height: var(--spacing-xl, 2rem);
+  padding: 0 var(--spacing-xs, 0.375rem);
+  border: var(--border-width, 1px) solid transparent;
   background: transparent;
   cursor: pointer;
-  border-radius: 0.25rem;
+  border-radius: var(--radius, 0.25rem);
   transition: all 0.2s;
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: var(--font-size-sm, 0.8125rem);
+  font-weight: var(--font-weight-medium, 500);
   color: var(--color-text-primary);
   line-height: 1;
   white-space: nowrap;
@@ -619,11 +619,11 @@ defineExpose({
 /* 只有文字的按钮需要更多宽度 */
 .toolbar-button:has(.toolbar-button-text):not(:has(.toolbar-icon)) {
   min-width: 2.5rem;
-  padding: 0 0.5rem;
+  padding: 0 var(--spacing-sm, 0.5rem);
 }
 
 .toolbar-button:hover:not(:disabled) {
-  background-color: var(--richtext-toolbar-button-hover-color, #e5e7eb);
+  background-color: var(--richtext-toolbar-button-hover-color, var(--color-gray-200));
   border-color: var(--color-border);
 }
 
@@ -634,7 +634,7 @@ defineExpose({
 }
 
 .toolbar-button:disabled {
-  opacity: 0.4;
+  opacity: var(--opacity-40, 0.4);
   cursor: not-allowed;
 }
 
@@ -648,10 +648,10 @@ defineExpose({
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 1rem;
-  height: 1rem;
-  margin: -0.5rem 0 0 -0.5rem;
-  border: 2px solid var(--color-primary);
+  width: var(--spacing-md, 1rem);
+  height: var(--spacing-md, 1rem);
+  margin: calc(-1 * var(--spacing-sm, 0.5rem)) 0 0 calc(-1 * var(--spacing-sm, 0.5rem));
+  border: calc(var(--border-width, 1px) * 2) solid var(--color-primary);
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
@@ -662,28 +662,28 @@ defineExpose({
 }
 
 .toolbar-icon {
-  font-size: 1.125rem;
+  font-size: var(--font-h4-size, 1.125rem);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .toolbar-button-text {
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: var(--font-size-sm, 0.8125rem);
+  font-weight: var(--font-weight-medium, 500);
   white-space: nowrap;
   line-height: 1;
 }
 
 /* 特殊样式的文字按钮 */
 .toolbar-button:has(.toolbar-button-text):not(:has(.toolbar-icon)) {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold, 600);
 }
 
 /* 分隔线按钮 */
 .toolbar-button .toolbar-button-text:contains('—') {
-  font-size: 1.25rem;
-  font-weight: 400;
+  font-size: var(--font-h3-size, 1.25rem);
+  font-weight: var(--font-weight-normal, 400);
 }
 
 /* 颜色按钮 - 文字颜色 */
@@ -692,20 +692,20 @@ defineExpose({
 }
 
 .toolbar-button[title*="文字颜色"] .toolbar-button-text {
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: var(--font-weight-bold, 700);
+  font-size: var(--font-size-base, 1rem);
 }
 
 .toolbar-button[title*="文字颜色"]::after {
   content: '';
   position: absolute;
-  bottom: 0.25rem;
+  bottom: var(--spacing-xs, 0.25rem);
   left: 50%;
   transform: translateX(-50%);
-  width: 1.25rem;
+  width: var(--spacing-lg, 1.25rem);
   height: 3px;
   background: var(--color-primary);
-  border-radius: 2px;
+  border-radius: var(--border-width, 2px);
 }
 
 /* 颜色按钮 - 背景高亮 */
@@ -714,7 +714,7 @@ defineExpose({
 }
 
 .toolbar-button[title*="背景高亮"] .toolbar-button-text {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold, 700);
   position: relative;
 }
 
@@ -725,15 +725,15 @@ defineExpose({
   left: 0;
   right: 0;
   height: 40%;
-  background: #ffeb3b;
+  background: var(--color-warning, #ffeb3b);
   z-index: -1;
 }
 
 .toolbar-separator {
-  width: 1px;
-  height: 1.5rem;
+  width: var(--border-width, 1px);
+  height: var(--spacing-lg, 1.5rem);
   background-color: var(--color-border);
-  margin: 0 0.25rem;
+  margin: 0 var(--spacing-xs, 0.25rem);
 }
 
 .richtext-editor {
@@ -747,7 +747,7 @@ defineExpose({
 
 .richtext-editor:empty::before {
   content: attr(data-placeholder);
-  color: var(--input-placeholder-color, #9ca3af);
+  color: var(--input-placeholder-color, var(--color-gray-400));
   pointer-events: none;
 }
 
@@ -770,12 +770,12 @@ defineExpose({
 
 .richtext-editor :deep(h1) { 
   font-size: 2em;
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: calc(var(--border-width, 1px) * 2) solid var(--color-border);
   padding-bottom: 0.3em;
 }
 .richtext-editor :deep(h2) { 
   font-size: 1.5em;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: var(--border-width, 1px) solid var(--color-border);
   padding-bottom: 0.3em;
 }
 .richtext-editor :deep(h3) { font-size: 1.25em; }
@@ -819,7 +819,7 @@ defineExpose({
 .richtext-editor :deep(img) {
   max-width: 100%;
   height: auto;
-  border-radius: 0.25rem;
+  border-radius: var(--radius, 0.25rem);
   margin: 1em 0;
   display: block;
   cursor: pointer;
@@ -834,15 +834,15 @@ defineExpose({
 
 /* 选中的图片 */
 .richtext-editor :deep(img.selected-image) {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: calc(var(--border-width, 1px) * 2) solid var(--color-primary);
+  outline-offset: calc(var(--border-width, 1px) * 2);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary), transparent 80%);
 }
 
 /* 图片悬停效果 */
 .richtext-editor :deep(img:hover) {
-  opacity: 0.95;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  opacity: var(--opacity-95, 0.95);
+  box-shadow: var(--shadow-sm);
 }
 
 /* 图片调整包装器 */
@@ -867,21 +867,21 @@ defineExpose({
   height: 12px;
   background: var(--color-primary);
   cursor: nwse-resize;
-  border-radius: 2px;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: var(--border-width, 2px);
+  border: calc(var(--border-width, 1px) * 2) solid var(--color-text-inverse, #fff);
+  box-shadow: var(--shadow-sm);
   z-index: 10;
 }
 
 .richtext-editor :deep(.resize-handle:hover) {
   transform: scale(1.2);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .richtext-editor :deep(hr) {
   margin: 1.5em 0;
   border: none;
-  border-top: 2px solid var(--color-border);
+  border-top: calc(var(--border-width, 1px) * 2) solid var(--color-border);
 }
 
 .richtext-editor :deep(blockquote) {
@@ -890,13 +890,13 @@ defineExpose({
   border-left: 4px solid var(--color-primary);
   background-color: var(--color-bg-secondary);
   color: var(--color-text-secondary);
-  border-radius: 0 0.25rem 0.25rem 0;
+  border-radius: 0 var(--radius, 0.25rem) var(--radius, 0.25rem) 0;
 }
 
 .richtext-editor :deep(code) {
-  padding: 0.125rem 0.25rem;
+  padding: var(--spacing-xs, 0.125rem) var(--spacing-xs, 0.25rem);
   background-color: var(--color-bg-tertiary);
-  border-radius: 0.25rem;
+  border-radius: var(--radius, 0.25rem);
   font-family: monospace;
   font-size: 0.875em;
 }
@@ -905,7 +905,7 @@ defineExpose({
   margin: 1em 0;
   padding: 1em;
   background-color: var(--color-bg-tertiary);
-  border-radius: 0.25rem;
+  border-radius: var(--radius, 0.25rem);
   overflow-x: auto;
 }
 

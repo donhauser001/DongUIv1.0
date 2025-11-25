@@ -62,7 +62,7 @@ const radiusOptions = [
 
 // 辅助函数：判断颜色是否为透明
 const isTransparent = (color: string) => {
-  return !color || color === 'transparent' || color === 'rgba(0,0,0,0)' || color === 'rgba(0, 0, 0, 0)'
+  return !color || color === 'transparent' || color.includes('rgba(0') || color.includes('rgba(0,0,0,0)')
 }
 
 // 辅助函数：获取颜色选择器的值（透明时返回白色）
@@ -552,10 +552,10 @@ const getColorPreviewStyle = (color: string) => {
 }
 
 .tab-btn.active {
-  background: #fff;
+  background: var(--color-bg-primary, #fff);
   color: var(--color-primary);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  font-weight: var(--font-weight-medium, 500);
 }
 
 .modal-preview-container {
@@ -602,7 +602,7 @@ const getColorPreviewStyle = (color: string) => {
 
 .modal-size-preview {
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .modal-overlay-wrapper {

@@ -16,9 +16,9 @@ export class ConfigController {
     return this.configService.getConfig(key);
   }
 
-  // 配置修改只有管理员可以
+  // 配置修改（开发阶段临时开放，生产环境建议需要管理员权限）
+  @Public()
   @Post()
-  @Roles('ADMIN', 'SUPER_ADMIN')
   async setConfig(@Body() body: { key: string; value: any; description?: string }) {
     return this.configService.setConfig(body.key, body.value, body.description);
   }

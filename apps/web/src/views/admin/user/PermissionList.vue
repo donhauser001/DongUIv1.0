@@ -163,10 +163,10 @@ const permissions = [
 }
 
 .type-badge {
-  padding: 0.125rem 0.5rem;
-  border-radius: var(--radius);
-  font-size: 0.75rem;
-  border: 1px solid transparent;
+  padding: var(--spacing-xs, 0.125rem) var(--spacing-sm, 0.5rem);
+  border-radius: calc(var(--radius) * 0.8);
+  font-size: var(--font-size-sm, 0.75rem);
+  border: var(--border-width, 1px) solid transparent;
 }
 
 .type-menu { background-color: color-mix(in srgb, var(--color-info), white 90%); color: var(--color-info); border-color: color-mix(in srgb, var(--color-info), white 80%); }

@@ -185,9 +185,20 @@ export function applyTheme(theme: typeof themeConfig) {
   // 应用按钮样式变量 - 主要按钮
   if (theme.button?.primary) {
     const btn = theme.button.primary
-    root.style.setProperty('--btn-primary-height', btn.height)
-    root.style.setProperty('--btn-primary-padding-x', btn.paddingX)
-    root.style.setProperty('--btn-primary-padding-y', btn.paddingY)
+    const buttonSize = (theme.button.size || 'medium') as 'small' | 'medium' | 'large'
+
+    // 根据全局按钮尺寸应用固定的高度和内边距组合
+    const sizeMap: Record<'small' | 'medium' | 'large', { height: string; paddingX: string; fontSize: string }> = {
+      small: { height: '1.5rem', paddingX: '0.5rem', fontSize: '12px' },
+      medium: { height: '2rem', paddingX: '1rem', fontSize: '14px' },
+      large: { height: '2.5rem', paddingX: '1.5rem', fontSize: '16px' }
+    }
+
+    const size = sizeMap[buttonSize] || sizeMap.medium
+    root.style.setProperty('--btn-primary-height', size.height)
+    root.style.setProperty('--btn-primary-padding-x', size.paddingX)
+    root.style.setProperty('--btn-primary-font-size', size.fontSize)
+    root.style.setProperty('--btn-primary-padding-y', '0') // 使用固定高度，不需要垂直内边距
     root.style.setProperty('--btn-primary-radius', btn.radius)
     root.style.setProperty('--btn-primary-border-width', btn.borderWidth)
 
@@ -220,9 +231,20 @@ export function applyTheme(theme: typeof themeConfig) {
   // 应用按钮样式变量 - 次要按钮
   if (theme.button?.outline) {
     const btn = theme.button.outline
-    root.style.setProperty('--btn-outline-height', btn.height)
-    root.style.setProperty('--btn-outline-padding-x', btn.paddingX)
-    root.style.setProperty('--btn-outline-padding-y', btn.paddingY)
+    const buttonSize = (theme.button.size || 'medium') as 'small' | 'medium' | 'large'
+
+    // 根据全局按钮尺寸应用固定的高度和内边距组合
+    const sizeMap: Record<'small' | 'medium' | 'large', { height: string; paddingX: string; fontSize: string }> = {
+      small: { height: '1.5rem', paddingX: '0.5rem', fontSize: '12px' },
+      medium: { height: '2rem', paddingX: '1rem', fontSize: '14px' },
+      large: { height: '2.5rem', paddingX: '1.5rem', fontSize: '16px' }
+    }
+
+    const size = sizeMap[buttonSize] || sizeMap.medium
+    root.style.setProperty('--btn-outline-height', size.height)
+    root.style.setProperty('--btn-outline-padding-x', size.paddingX)
+    root.style.setProperty('--btn-outline-font-size', size.fontSize)
+    root.style.setProperty('--btn-outline-padding-y', '0') // 使用固定高度，不需要垂直内边距
     root.style.setProperty('--btn-outline-radius', btn.radius)
     root.style.setProperty('--btn-outline-border-width', btn.borderWidth)
     root.style.setProperty('--btn-outline-border-color', btn.borderColor)
@@ -314,6 +336,8 @@ export function applyTheme(theme: typeof themeConfig) {
       const select = theme.form.select
       root.style.setProperty('--select-height', select.height)
       root.style.setProperty('--select-padding-x', select.paddingX || '0.75rem')
+      root.style.setProperty('--select-padding-right', select.paddingRight || '3rem')
+      root.style.setProperty('--select-arrow-position', select.arrowPosition || '1rem')
       root.style.setProperty('--select-radius', select.radius)
       root.style.setProperty('--select-border-width', select.borderWidth)
       root.style.setProperty('--select-border-color', select.borderColor)
@@ -644,6 +668,27 @@ export function applyTheme(theme: typeof themeConfig) {
       if (menu.itemDangerColor) root.style.setProperty('--action-menu-item-danger-color', menu.itemDangerColor)
       if (menu.itemDangerHoverBg) root.style.setProperty('--action-menu-item-danger-hover-bg', menu.itemDangerHoverBg)
     }
+  }
+
+  // 应用渐变配置
+  if (theme.gradient) {
+    root.style.setProperty('--gradient-from', theme.gradient.from)
+    root.style.setProperty('--gradient-to', theme.gradient.to)
+    root.style.setProperty('--gradient-direction', theme.gradient.direction)
+  }
+
+  // 应用间距配置
+  if (theme.spacing) {
+    Object.keys(theme.spacing).forEach(key => {
+      root.style.setProperty(`--spacing-${key}`, (theme.spacing as any)[key])
+    })
+  }
+
+  // 应用阴影配置
+  if (theme.shadows) {
+    Object.keys(theme.shadows).forEach(key => {
+      root.style.setProperty(`--shadow-${key}`, (theme.shadows as any)[key])
+    })
   }
 }
 

@@ -20,10 +20,79 @@
   --color-error: #ef4444;
   --color-info: #3b82f6;
 
+  /* Gray Scale (Extended) */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Primary Color Variants (for gradients and hover states) */
+  --color-primary-50: color-mix(in srgb, var(--color-primary) 10%, white 90%);
+  --color-primary-100: color-mix(in srgb, var(--color-primary) 20%, white 80%);
+  --color-primary-200: color-mix(in srgb, var(--color-primary) 30%, white 70%);
+  --color-primary-300: color-mix(in srgb, var(--color-primary) 40%, white 60%);
+  --color-primary-400: color-mix(in srgb, var(--color-primary) 60%, white 40%);
+  --color-primary-500: color-mix(in srgb, var(--color-primary) 80%, white 20%);
+  --color-primary-600: var(--color-primary);
+  --color-primary-700: color-mix(in srgb, var(--color-primary) 90%, black 10%);
+  --color-primary-800: color-mix(in srgb, var(--color-primary) 80%, black 20%);
+  --color-primary-900: color-mix(in srgb, var(--color-primary) 70%, black 30%);
+
+  /* Opacity Levels */
+  --opacity-10: 0.1;
+  --opacity-20: 0.2;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-70: 0.7;
+  --opacity-80: 0.8;
+  --opacity-90: 0.9;
+  --opacity-100: 1;
+
   /* Global Style */
   --radius: 0.375rem;
   --border-width: 1px;
   --divider-style: solid;
+
+  /* Spacing System */
+  --spacing-0: 0;
+  --spacing-xs: 0.25rem;
+  /* 4px */
+  --spacing-sm: 0.5rem;
+  /* 8px */
+  --spacing-md: 1rem;
+  /* 16px */
+  --spacing-lg: 1.5rem;
+  /* 24px */
+  --spacing-xl: 2rem;
+  /* 32px */
+  --spacing-2xl: 2.5rem;
+  /* 40px */
+  --spacing-3xl: 3rem;
+  /* 48px */
+  --spacing-4xl: 4rem;
+  /* 64px */
+
+  /* Shadow System */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+  /* Gradient Background */
+  --gradient-from: var(--color-primary-50);
+  --gradient-to: var(--color-primary-100);
+  --gradient-direction: to bottom right;
 
   /* Typography */
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -233,11 +302,16 @@ p,
 /* 白底卡片 */
 .card-white {
   background-color: var(--card-white-bg-color, #ffffff);
-  border-color: var(--card-white-border-color, #e5e7eb);
+  border: var(--card-border-width, 1px) solid var(--card-white-border-color, #e5e7eb);
+  border-radius: var(--card-radius, 0.5rem);
+  padding: var(--card-padding, 1rem);
+  box-shadow: var(--card-shadow, 0 1px 3px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
 .card-white:hover {
   border-color: var(--card-white-hover-border-color, var(--color-primary));
+  box-shadow: var(--card-hover-shadow, 0 4px 16px rgba(0, 0, 0, 0.1));
 }
 
 .card-white .card-title {
@@ -251,11 +325,16 @@ p,
 /* 主色底卡片 */
 .card-primary {
   background-color: var(--card-primary-bg-color, var(--color-primary));
-  border-color: var(--card-primary-border-color, var(--color-primary));
+  border: var(--card-border-width, 1px) solid var(--card-primary-border-color, var(--color-primary));
+  border-radius: var(--card-radius, 0.5rem);
+  padding: var(--card-padding, 1rem);
+  box-shadow: var(--card-shadow, 0 1px 3px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
 .card-primary:hover {
   border-color: var(--card-primary-hover-border-color, #ffffff);
+  box-shadow: var(--card-hover-shadow, 0 4px 16px rgba(0, 0, 0, 0.1));
 }
 
 .card-primary .card-title {
@@ -269,11 +348,16 @@ p,
 /* 黑底卡片 */
 .card-dark {
   background-color: var(--card-dark-bg-color, #1a1a1a);
-  border-color: var(--card-dark-border-color, #2d2d2d);
+  border: var(--card-border-width, 1px) solid var(--card-dark-border-color, #2d2d2d);
+  border-radius: var(--card-radius, 0.5rem);
+  padding: var(--card-padding, 1rem);
+  box-shadow: var(--card-shadow, 0 1px 3px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
 .card-dark:hover {
   border-color: var(--card-dark-hover-border-color, var(--color-primary));
+  box-shadow: var(--card-hover-shadow, 0 4px 16px rgba(0, 0, 0, 0.1));
 }
 
 .card-dark .card-title {
@@ -520,14 +604,17 @@ p,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--btn-primary-padding-y) var(--btn-primary-padding-x);
-  min-height: var(--btn-primary-height);
+  padding: 0 var(--btn-primary-padding-x);
+  height: var(--btn-primary-height);
   background-color: var(--btn-primary-bg-color);
   color: var(--btn-primary-text-color);
   border: var(--btn-primary-border-width) solid var(--btn-primary-border-color);
   border-radius: var(--btn-primary-radius);
+  font-size: var(--btn-primary-font-size);
   cursor: pointer;
   transition: all 0.2s;
+  gap: 0.5rem;
+  /* 图标和文字间距 */
 }
 
 .btn-primary:hover {
@@ -547,14 +634,17 @@ p,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--btn-outline-padding-y) var(--btn-outline-padding-x);
-  min-height: var(--btn-outline-height);
+  padding: 0 var(--btn-outline-padding-x);
+  height: var(--btn-outline-height);
   background-color: var(--btn-outline-bg-color);
   color: var(--btn-outline-text-color);
   border: var(--btn-outline-border-width) solid var(--btn-outline-border-color);
   border-radius: var(--btn-outline-radius);
+  font-size: var(--btn-outline-font-size);
   cursor: pointer;
   transition: all 0.2s;
+  gap: 0.5rem;
+  /* 图标和文字间距 */
 }
 
 .btn-outline:hover {
@@ -582,8 +672,18 @@ p,
 }
 
 /* 为 select 元素添加右侧内边距，避免箭头贴边 */
+/* 使用更大的右侧内边距，确保全圆角时箭头在圆心 */
 select.input-base {
-  padding-right: 2.5rem;
+  padding-right: var(--select-padding-right, 3rem);
+
+  /* 移除浏览器原生样式并添加自定义箭头 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23111827' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--select-arrow-position, 1rem) center;
+  background-size: 12px;
 }
 
 .input-base::placeholder {
@@ -725,7 +825,7 @@ select.input-base {
   display: block;
   width: 100%;
   height: var(--select-height, 2.5rem);
-  padding: 0 2.5rem 0 var(--select-padding-x, 0.75rem);
+  padding: 0 var(--select-padding-right, 3rem) 0 var(--select-padding-x, 0.75rem);
   border: var(--select-border-width, 1px) solid var(--select-border-color, #e5e7eb);
   border-radius: var(--select-radius, 0.375rem);
   background-color: var(--select-bg-color, #ffffff);
@@ -734,6 +834,15 @@ select.input-base {
   font-size: inherit;
   cursor: pointer;
   transition: all 0.2s ease;
+
+  /* 移除浏览器原生样式并添加自定义箭头 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23111827' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--select-arrow-position, 1rem) center;
+  background-size: 12px;
 }
 
 .select-base:focus {
@@ -930,6 +1039,24 @@ select.input-base {
 }
 
 .table-base tbody tr:hover {
+  background-color: var(--table-hover-bg, #f3f4f6);
+}
+
+/* 内部边框 */
+.table-base th {
+  border-bottom: var(--table-inner-border-width, 1px) solid var(--table-inner-border-color, #e5e7eb);
+}
+
+.table-base tbody tr:not(:last-child) td {
+  border-bottom: var(--table-inner-border-width, 1px) solid var(--table-inner-border-color, #e5e7eb);
+}
+
+/* 斑马纹 */
+.table-base.table-striped tbody tr:nth-child(even) {
+  background-color: var(--table-stripe-color, #f9fafb);
+}
+
+.table-base.table-striped tbody tr:nth-child(even):hover {
   background-color: var(--table-hover-bg, #f3f4f6);
 }
 

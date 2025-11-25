@@ -50,9 +50,9 @@ const passwordStrength = computed(() => {
   if (/\d/.test(password)) strength++
   if (/[^a-zA-Z0-9]/.test(password)) strength++
   
-  if (strength <= 2) return { level: strength, text: '弱', color: '#ef4444' }
-  if (strength <= 3) return { level: strength, text: '中', color: '#f59e0b' }
-  return { level: strength, text: '强', color: '#10b981' }
+  if (strength <= 2) return { level: strength, text: '弱', color: 'var(--color-error)' }
+  if (strength <= 3) return { level: strength, text: '中', color: 'var(--color-warning)' }
+  return { level: strength, text: '强', color: 'var(--color-success)' }
 })
 
 // 密码匹配检查
@@ -679,7 +679,7 @@ onMounted(() => {
 .info-card {
   background: var(--color-bg-primary);
   border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius);
+  border-radius: var(--card-radius, var(--radius));
   overflow: hidden;
 }
 
@@ -794,7 +794,7 @@ onMounted(() => {
   width: 100%;
   height: 4px;
   background: var(--color-bg-tertiary);
-  border-radius: 2px;
+  border-radius: calc(var(--border-width, 1px) * 2);
   overflow: hidden;
 }
 
@@ -804,22 +804,22 @@ onMounted(() => {
 }
 
 .strength-text {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: var(--font-size-sm, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
 }
 
 .password-tips {
-  margin-top: 2rem;
-  padding: 1rem;
+  margin-top: var(--spacing-xl, 2rem);
+  padding: var(--spacing-md, 1rem);
   background: var(--color-bg-secondary);
-  border-radius: var(--radius);
+  border-radius: var(--card-radius, var(--radius));
 }
 
 .avatar-upload-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: var(--spacing-xl, 2rem);
   max-width: 500px;
   margin: 0 auto;
 }
@@ -833,7 +833,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid var(--color-border);
+  border: calc(var(--border-width, 1px) * 4) solid var(--color-border);
 }
 
 .avatar-preview-large img {
@@ -843,14 +843,14 @@ onMounted(() => {
 }
 
 .avatar-placeholder-large {
-  font-size: 4rem;
-  font-weight: 600;
+  font-size: var(--spacing-4xl, 4rem);
+  font-weight: var(--font-weight-semibold, 600);
   color: var(--color-text-secondary);
 }
 
 .avatar-controls {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md, 1rem);
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -863,11 +863,11 @@ onMounted(() => {
 .btn-outline {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: var(--spacing-sm, 0.5rem);
+  padding: var(--btn-primary-padding-y, 0.5rem) var(--btn-primary-padding-x, 1rem);
+  border-radius: var(--btn-primary-radius, var(--radius));
+  font-size: var(--font-body-size, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
   cursor: pointer;
   transition: all 0.2s;
   border: var(--border-width) solid;
@@ -875,7 +875,7 @@ onMounted(() => {
 
 .btn-primary {
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--color-text-inverse, #ffffff);
   border-color: var(--color-primary);
 }
 
@@ -884,7 +884,7 @@ onMounted(() => {
 }
 
 .btn-primary:disabled {
-  opacity: 0.5;
+  opacity: var(--opacity-50, 0.5);
   cursor: not-allowed;
 }
 
@@ -907,9 +907,9 @@ onMounted(() => {
 
 .tab-group {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-sm, 0.5rem);
   background: var(--color-bg-secondary);
-  padding: 0.25rem;
+  padding: var(--spacing-xs, 0.25rem);
   border-radius: var(--radius);
   width: fit-content;
 }
@@ -917,14 +917,14 @@ onMounted(() => {
 .tab-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: var(--spacing-sm, 0.5rem);
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
   border: none;
   background: transparent;
   color: var(--color-text-secondary);
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: calc(var(--radius) - 0.125rem);
+  font-size: var(--font-body-size, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  border-radius: calc(var(--radius) - var(--spacing-xs, 0.125rem));
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -937,6 +937,6 @@ onMounted(() => {
 .tab-btn.active {
   background: var(--color-bg-primary);
   color: var(--color-primary);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 </style>

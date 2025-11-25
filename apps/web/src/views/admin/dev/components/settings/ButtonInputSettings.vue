@@ -152,6 +152,28 @@ const resizeOptions = [
 
       <!-- 按钮设置 -->
       <div v-if="activeTab === 'buttons'" class="fade-in settings-group">
+        <!-- 全局按钮尺寸设置 -->
+        <div class="card-white settings-card">
+          <div class="settings-card-header">
+            <div>
+              <label class="settings-card-title" style="font-size: var(--font-size-lg, 1.1rem);">全局按钮尺寸</label>
+              <p style="margin: var(--spacing-xs, 0.25rem) 0 0 0; font-size: var(--font-size-sm, 0.875rem); color: var(--card-white-content-color, #6b7280);">统一控制所有按钮的尺寸</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: var(--spacing-md, 0.75rem); margin-top: var(--spacing-md, 0.75rem);">
+            <button 
+              v-for="size in [{ value: 'small', label: '小', height: '1.75rem' }, { value: 'medium', label: '标准', height: '2rem' }, { value: 'large', label: '大', height: '2.5rem' }]"
+              :key="size.value"
+              @click="config.button.size = size.value"
+              class="size-selector-btn-white"
+              :class="{ 'active': config.button.size === size.value }"
+            >
+              <div style="font-size: var(--font-size-base, 1rem);">{{ size.label }}</div>
+              <div style="font-size: var(--font-size-sm, 0.75rem); opacity: 0.7; margin-top: var(--spacing-xs, 0.25rem);">{{ size.height }}</div>
+            </button>
+          </div>
+        </div>
+        
         <div class="text-tab-group">
           <button
             @click="activeButtonType = 'primary'"
@@ -170,39 +192,21 @@ const resizeOptions = [
         </div>
 
         <!-- 主要按钮设置 -->
-        <div v-if="activeButtonType === 'primary'" style="display: flex; flex-direction: column; gap: 1.5rem;">
-          <!-- 尺寸与形状 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">尺寸与形状</label>
-              <span class="stat-label">按钮的基础尺寸设置</span>
+        <div v-if="activeButtonType === 'primary'" style="display: flex; flex-direction: column; gap: var(--spacing-lg, 1.5rem);">
+          <!-- 形状设置 -->
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">形状设置</label>
+              <span class="settings-card-desc">按钮的圆角和边框</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
-                <label class="stat-label">高度</label>
-                <select v-model="config.button.primary.height" class="form-input">
-                  <option v-for="opt in heightOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">圆角</label>
                 <select v-model="config.button.primary.radius" class="form-input">
                   <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
-                <label class="stat-label">水平内边距</label>
-                <select v-model="config.button.primary.paddingX" class="form-input">
-                  <option v-for="opt in paddingOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-              <div class="form-group" style="gap: 0.25rem;">
-                <label class="stat-label">垂直内边距</label>
-                <select v-model="config.button.primary.paddingY" class="form-input">
-                  <option v-for="opt in paddingYOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框宽度</label>
                 <input v-model="config.button.primary.borderWidth" type="text" class="form-input" />
               </div>
@@ -210,27 +214,27 @@ const resizeOptions = [
           </div>
 
           <!-- 正常状态 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">正常状态</label>
-              <span class="stat-label">按钮的默认外观</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">正常状态</label>
+              <span class="settings-card-desc">按钮的默认外观</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.backgroundColor" type="color" class="color-preview" />
                   <input v-model="config.button.primary.backgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.textColor" type="color" class="color-preview" />
                   <input v-model="config.button.primary.textColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.borderColor" type="color" class="color-preview" />
@@ -241,27 +245,27 @@ const resizeOptions = [
           </div>
 
           <!-- 悬停状态 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">悬停状态</label>
-              <span class="stat-label">鼠标悬停时的样式</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">悬停状态</label>
+              <span class="settings-card-desc">鼠标悬停时的样式</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.hoverBackgroundColor" type="color" class="color-preview" />
                   <input v-model="config.button.primary.hoverBackgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.hoverTextColor" type="color" class="color-preview" />
                   <input v-model="config.button.primary.hoverTextColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.hoverBorderColor" type="color" class="color-preview" />
@@ -272,27 +276,27 @@ const resizeOptions = [
           </div>
 
           <!-- 禁用状态 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">禁用状态</label>
-              <span class="stat-label">按钮不可用时的样式</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">禁用状态</label>
+              <span class="settings-card-desc">按钮不可用时的样式</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.disabledBackgroundColor" type="color" class="color-preview" />
                   <input v-model="config.button.primary.disabledBackgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.disabledTextColor" type="color" class="color-preview" />
                   <input v-model="config.button.primary.disabledTextColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.primary.disabledBorderColor" type="color" class="color-preview" />
@@ -304,39 +308,21 @@ const resizeOptions = [
         </div>
 
         <!-- 次要按钮设置 -->
-        <div v-else-if="activeButtonType === 'outline'" style="display: flex; flex-direction: column; gap: 1.5rem;">
-          <!-- 尺寸与形状 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">尺寸与形状</label>
-              <span class="stat-label">按钮的基础尺寸设置</span>
+        <div v-else-if="activeButtonType === 'outline'" style="display: flex; flex-direction: column; gap: var(--spacing-lg, 1.5rem);">
+          <!-- 形状设置 -->
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">形状设置</label>
+              <span class="settings-card-desc">按钮的圆角和边框</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
-                <label class="stat-label">高度</label>
-                <select v-model="config.button.outline.height" class="form-input">
-                  <option v-for="opt in heightOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">圆角</label>
                 <select v-model="config.button.outline.radius" class="form-input">
                   <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
-                <label class="stat-label">水平内边距</label>
-                <select v-model="config.button.outline.paddingX" class="form-input">
-                  <option v-for="opt in paddingOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-              <div class="form-group" style="gap: 0.25rem;">
-                <label class="stat-label">垂直内边距</label>
-                <select v-model="config.button.outline.paddingY" class="form-input">
-                  <option v-for="opt in paddingYOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框宽度</label>
                 <input v-model="config.button.outline.borderWidth" type="text" class="form-input" />
               </div>
@@ -344,27 +330,27 @@ const resizeOptions = [
           </div>
 
           <!-- 正常状态 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">正常状态</label>
-              <span class="stat-label">按钮的默认外观</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">正常状态</label>
+              <span class="settings-card-desc">按钮的默认外观</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.backgroundColor" type="color" class="color-preview" />
                   <input v-model="config.button.outline.backgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.textColor" type="color" class="color-preview" />
                   <input v-model="config.button.outline.textColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.borderColor" type="color" class="color-preview" />
@@ -375,27 +361,27 @@ const resizeOptions = [
           </div>
 
           <!-- 悬停状态 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">悬停状态</label>
-              <span class="stat-label">鼠标悬停时的样式</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">悬停状态</label>
+              <span class="settings-card-desc">鼠标悬停时的样式</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.hoverBackgroundColor" type="color" class="color-preview" />
                   <input v-model="config.button.outline.hoverBackgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.hoverTextColor" type="color" class="color-preview" />
                   <input v-model="config.button.outline.hoverTextColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.hoverBorderColor" type="color" class="color-preview" />
@@ -406,27 +392,27 @@ const resizeOptions = [
           </div>
 
           <!-- 禁用状态 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">禁用状态</label>
-              <span class="stat-label">按钮不可用时的样式</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">禁用状态</label>
+              <span class="settings-card-desc">按钮不可用时的样式</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.disabledBackgroundColor" type="color" class="color-preview" />
                   <input v-model="config.button.outline.disabledBackgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.disabledTextColor" type="color" class="color-preview" />
                   <input v-model="config.button.outline.disabledTextColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.button.outline.disabledBorderColor" type="color" class="color-preview" />
@@ -465,39 +451,39 @@ const resizeOptions = [
         </div>
 
         <!-- 单行文本设置 -->
-        <div v-if="activeInputType === 'text'" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div v-if="activeInputType === 'text'" style="display: flex; flex-direction: column; gap: var(--spacing-lg, 1.5rem);">
           <!-- 尺寸与形状 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">尺寸与形状</label>
-              <span class="stat-label">输入框的基础尺寸设置</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">尺寸与形状</label>
+              <span class="settings-card-desc">输入框的基础尺寸设置</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">高度</label>
                 <select v-model="config.input.text.height" class="form-input">
                   <option v-for="opt in heightOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">圆角</label>
                 <select v-model="config.input.text.radius" class="form-input">
                   <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">水平内边距</label>
                 <select v-model="config.input.text.paddingX" class="form-input">
                   <option v-for="opt in paddingOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">垂直内边距</label>
                 <select v-model="config.input.text.paddingY" class="form-input">
                   <option v-for="opt in paddingYOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框宽度</label>
                 <input v-model="config.input.text.borderWidth" type="text" class="form-input" />
               </div>
@@ -505,62 +491,62 @@ const resizeOptions = [
           </div>
 
           <!-- 颜色 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">颜色</label>
-              <span class="stat-label">输入框的颜色配置</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">颜色</label>
+              <span class="settings-card-desc">输入框的颜色配置</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.backgroundColor" type="color" class="color-preview" />
                   <input v-model="config.input.text.backgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.textColor" type="color" class="color-preview" />
                   <input v-model="config.input.text.textColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.borderColor" type="color" class="color-preview" />
                   <input v-model="config.input.text.borderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">占位符颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.placeholderColor" type="color" class="color-preview" />
                   <input v-model="config.input.text.placeholderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">聚焦边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.focusBorderColor" type="color" class="color-preview" />
                   <input v-model="config.input.text.focusBorderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">聚焦光圈颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.focusRingColor" type="color" class="color-preview" />
                   <input v-model="config.input.text.focusRingColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">禁用背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.disabledBackgroundColor" type="color" class="color-preview" />
                   <input v-model="config.input.text.disabledBackgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">禁用文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.text.disabledTextColor" type="color" class="color-preview" />
@@ -572,43 +558,43 @@ const resizeOptions = [
         </div>
 
         <!-- 多行文本设置 -->
-        <div v-else-if="activeInputType === 'textarea'" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div v-else-if="activeInputType === 'textarea'" style="display: flex; flex-direction: column; gap: var(--spacing-lg, 1.5rem);">
           <!-- 尺寸与形状 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">尺寸与形状</label>
-              <span class="stat-label">多行文本框的基础尺寸设置</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">尺寸与形状</label>
+              <span class="settings-card-desc">多行文本框的基础尺寸设置</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">最小高度</label>
                 <input v-model="config.input.textarea.minHeight" type="text" class="form-input" />
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">尺寸调整</label>
                 <select v-model="config.input.textarea.resize" class="form-input">
                   <option v-for="opt in resizeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">圆角</label>
                 <select v-model="config.input.textarea.radius" class="form-input">
                   <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">水平内边距</label>
                 <select v-model="config.input.textarea.paddingX" class="form-input">
                   <option v-for="opt in paddingOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">垂直内边距</label>
                 <select v-model="config.input.textarea.paddingY" class="form-input">
                   <option v-for="opt in paddingYOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框宽度</label>
                 <input v-model="config.input.textarea.borderWidth" type="text" class="form-input" />
               </div>
@@ -616,62 +602,62 @@ const resizeOptions = [
           </div>
 
           <!-- 颜色 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">颜色</label>
-              <span class="stat-label">多行文本框的颜色配置</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">颜色</label>
+              <span class="settings-card-desc">多行文本框的颜色配置</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.backgroundColor" type="color" class="color-preview" />
                   <input v-model="config.input.textarea.backgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.textColor" type="color" class="color-preview" />
                   <input v-model="config.input.textarea.textColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.borderColor" type="color" class="color-preview" />
                   <input v-model="config.input.textarea.borderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">占位符颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.placeholderColor" type="color" class="color-preview" />
                   <input v-model="config.input.textarea.placeholderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">聚焦边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.focusBorderColor" type="color" class="color-preview" />
                   <input v-model="config.input.textarea.focusBorderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">聚焦光圈颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.focusRingColor" type="color" class="color-preview" />
                   <input v-model="config.input.textarea.focusRingColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">禁用背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.disabledBackgroundColor" type="color" class="color-preview" />
                   <input v-model="config.input.textarea.disabledBackgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">禁用文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.textarea.disabledTextColor" type="color" class="color-preview" />
@@ -683,29 +669,29 @@ const resizeOptions = [
         </div>
 
         <!-- 富文本编辑器设置 -->
-        <div v-else-if="activeInputType === 'richtext'" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div v-else-if="activeInputType === 'richtext'" style="display: flex; flex-direction: column; gap: var(--spacing-lg, 1.5rem);">
           <!-- 整体外观 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">整体外观</label>
-              <span class="stat-label">富文本编辑器的基础尺寸</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">整体外观</label>
+              <span class="settings-card-desc">富文本编辑器的基础尺寸</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">最小高度</label>
                 <input v-model="config.input.richtext.minHeight" type="text" class="form-input" />
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">最大高度</label>
                 <input v-model="config.input.richtext.maxHeight" type="text" class="form-input" />
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">圆角</label>
                 <select v-model="config.input.richtext.radius" class="form-input">
                   <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框宽度</label>
                 <input v-model="config.input.richtext.borderWidth" type="text" class="form-input" />
               </div>
@@ -713,62 +699,62 @@ const resizeOptions = [
           </div>
 
           <!-- 颜色 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">颜色</label>
-              <span class="stat-label">编辑器和工具栏的颜色配置</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">颜色</label>
+              <span class="settings-card-desc">编辑器和工具栏的颜色配置</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.backgroundColor" type="color" class="color-preview" />
                   <input v-model="config.input.richtext.backgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.borderColor" type="color" class="color-preview" />
                   <input v-model="config.input.richtext.borderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">工具栏背景颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.toolbarBackgroundColor" type="color" class="color-preview" />
                   <input v-model="config.input.richtext.toolbarBackgroundColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">工具栏边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.toolbarBorderColor" type="color" class="color-preview" />
                   <input v-model="config.input.richtext.toolbarBorderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">工具栏按钮悬停颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.toolbarButtonHoverColor" type="color" class="color-preview" />
                   <input v-model="config.input.richtext.toolbarButtonHoverColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">编辑器文字颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.editorTextColor" type="color" class="color-preview" />
                   <input v-model="config.input.richtext.editorTextColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">编辑器聚焦边框颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.editorFocusBorderColor" type="color" class="color-preview" />
                   <input v-model="config.input.richtext.editorFocusBorderColor" type="text" class="form-input color-text" />
                 </div>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">编辑器聚焦光圈颜色</label>
                 <div class="form-color-row">
                   <input v-model="config.input.richtext.editorFocusRingColor" type="color" class="color-preview" />
@@ -779,19 +765,19 @@ const resizeOptions = [
           </div>
 
           <!-- 内边距 -->
-          <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <label class="form-label" style="font-weight: 600; margin: 0;">内边距</label>
-              <span class="stat-label">编辑区域的内边距设置</span>
+          <div class="card-white settings-card">
+            <div class="settings-card-header">
+              <label class="settings-card-title">内边距</label>
+              <span class="settings-card-desc">编辑区域的内边距设置</span>
             </div>
-            <div class="grid-2" style="gap: 0.75rem;">
-              <div class="form-group" style="gap: 0.25rem;">
+            <div class="grid-2" style="gap: var(--spacing-md, 0.75rem);">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">编辑器水平内边距</label>
                 <select v-model="config.input.richtext.editorPaddingX" class="form-input">
                   <option v-for="opt in paddingOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
-              <div class="form-group" style="gap: 0.25rem;">
+              <div class="form-group" style="gap: var(--spacing-xs, 0.25rem);">
                 <label class="stat-label">编辑器垂直内边距</label>
                 <select v-model="config.input.richtext.editorPaddingY" class="form-input">
                   <option v-for="opt in paddingYOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
@@ -866,9 +852,30 @@ const resizeOptions = [
             <div class="preview-item">
               <label class="preview-label">不同尺寸</label>
               <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                <button class="btn-primary" style="padding: 0.375rem 0.75rem; font-size: 0.875rem;">小按钮</button>
-                <button class="btn-primary">标准按钮</button>
-                <button class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 1rem;">大按钮</button>
+                <button class="btn-primary" :style="{
+                  height: '1.75rem',
+                  padding: '0 0.75rem',
+                  fontSize: '0.875rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }">小按钮</button>
+                <button class="btn-primary" :style="{
+                  height: '2rem',
+                  padding: '0 1rem',
+                  fontSize: '0.875rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }">标准按钮</button>
+                <button class="btn-primary" :style="{
+                  height: '2.5rem',
+                  padding: '0 1.5rem',
+                  fontSize: '1rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }">大按钮</button>
               </div>
             </div>
 
@@ -1281,6 +1288,112 @@ const resizeOptions = [
   right: 0;
   height: 2px;
   background-color: var(--color-primary);
+}
+
+/* 按钮尺寸选择器 - 白底版本 */
+.size-selector-btn-white {
+  flex: 1;
+  padding: var(--spacing-md, 0.75rem);
+  background: var(--color-bg-secondary, #f9fafb);
+  border: var(--border-width, 1px) solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius, 0.5rem);
+  color: var(--color-text-primary, #111827);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.size-selector-btn-white:hover {
+  background: var(--color-bg-primary, white);
+  border-color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.size-selector-btn-white.active {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 30%, transparent 70%);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+
+/* 设置卡片统一样式 */
+.settings-card {
+  padding: var(--card-padding, 1rem);
+}
+
+.settings-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md, 0.75rem);
+}
+
+.settings-card-title {
+  font-weight: var(--font-weight-semibold, 600);
+  margin: 0;
+  color: var(--card-white-title-color, #111827);
+  font-size: var(--font-size-base, 1rem);
+}
+
+.settings-card-desc {
+  color: var(--card-white-content-color, #6b7280);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+/* 按钮尺寸选择器 - 白底版本 */
+.size-selector-btn-white {
+  flex: 1;
+  padding: var(--spacing-md, 0.75rem);
+  background: var(--color-bg-secondary, #f9fafb);
+  border: var(--border-width, 1px) solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius, 0.5rem);
+  color: var(--color-text-primary, #111827);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.size-selector-btn-white:hover {
+  background: var(--color-bg-primary, white);
+  border-color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.size-selector-btn-white.active {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 30%, transparent 70%);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+
+/* 设置卡片统一样式 */
+.settings-card {
+  padding: var(--card-padding, 1rem);
+}
+
+.settings-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md, 0.75rem);
+}
+
+.settings-card-title {
+  font-weight: var(--font-weight-semibold, 600);
+  margin: 0;
+  color: var(--card-white-title-color, #111827);
+  font-size: var(--font-size-base, 1rem);
+}
+
+.settings-card-desc {
+  color: var(--card-white-content-color, #6b7280);
+  font-size: var(--font-size-sm, 0.875rem);
 }
 
 </style>

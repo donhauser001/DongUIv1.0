@@ -113,6 +113,54 @@ const radiusOptions = [
   { label: '大 (0.5rem)', value: '0.5rem' },
   { label: '全圆角 (9999px)', value: '9999px' },
 ]
+
+const borderWidthOptions = [
+  { label: '无边框 (0)', value: '0' },
+  { label: '细 (1px)', value: '1px' },
+  { label: '标准 (2px)', value: '2px' },
+  { label: '粗 (3px)', value: '3px' },
+]
+
+const paddingOptions = [
+  { label: '极小 (0.5rem)', value: '0.5rem' },
+  { label: '小 (0.75rem)', value: '0.75rem' },
+  { label: '标准 (1rem)', value: '1rem' },
+  { label: '大 (1.5rem)', value: '1.5rem' },
+  { label: '超大 (2rem)', value: '2rem' },
+  { label: '超大 (2.5rem)', value: '2.5rem' },
+  { label: '超大 (3rem)', value: '3rem' },
+]
+
+const arrowPositionOptions = [
+  { label: '靠近 (0.75rem)', value: '0.75rem' },
+  { label: '标准 (1rem)', value: '1rem' },
+  { label: '远 (1.25rem)', value: '1.25rem' },
+  { label: '很远 (1.5rem)', value: '1.5rem' },
+]
+
+const checkboxSizeOptions = [
+  { label: '小 (1rem)', value: '1rem' },
+  { label: '标准 (1.25rem)', value: '1.25rem' },
+  { label: '大 (1.5rem)', value: '1.5rem' },
+]
+
+const radioDotSizeOptions = [
+  { label: '小 (0.375rem)', value: '0.375rem' },
+  { label: '标准 (0.5rem)', value: '0.5rem' },
+  { label: '大 (0.625rem)', value: '0.625rem' },
+]
+
+const switchWidthOptions = [
+  { label: '小 (2.25rem)', value: '2.25rem' },
+  { label: '标准 (2.75rem)', value: '2.75rem' },
+  { label: '大 (3.25rem)', value: '3.25rem' },
+]
+
+const switchHeightOptions = [
+  { label: '小 (1.25rem)', value: '1.25rem' },
+  { label: '标准 (1.5rem)', value: '1.5rem' },
+  { label: '大 (1.75rem)', value: '1.75rem' },
+]
 </script>
 
 <template>
@@ -189,8 +237,22 @@ const radiusOptions = [
               </select>
             </div>
             <div class="settings-field">
+              <label class="settings-field-label">右侧内边距</label>
+              <select v-model="config.form.select.paddingRight" class="form-input input-base">
+                <option v-for="opt in paddingOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">箭头位置（距右边框）</label>
+              <select v-model="config.form.select.arrowPosition" class="form-input input-base">
+                <option v-for="opt in arrowPositionOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
+            </div>
+            <div class="settings-field">
               <label class="settings-field-label">边框宽度</label>
-              <input v-model="config.form.select.borderWidth" type="text" class="form-input input-base" placeholder="1px" />
+              <select v-model="config.form.select.borderWidth" class="form-input input-base">
+                <option v-for="opt in borderWidthOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -256,7 +318,9 @@ const radiusOptions = [
           <div class="settings-section-content">
             <div class="settings-field">
               <label class="settings-field-label">大小</label>
-              <input v-model="config.form.checkbox.size" type="text" class="form-input input-base" placeholder="1.25rem" />
+              <select v-model="config.form.checkbox.size" class="form-input input-base">
+                <option v-for="opt in checkboxSizeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
             <div class="settings-field">
               <label class="settings-field-label">圆角</label>
@@ -266,7 +330,9 @@ const radiusOptions = [
             </div>
             <div class="settings-field">
               <label class="settings-field-label">边框宽度</label>
-              <input v-model="config.form.checkbox.borderWidth" type="text" class="form-input input-base" placeholder="1px" />
+              <select v-model="config.form.checkbox.borderWidth" class="form-input input-base">
+                <option v-for="opt in borderWidthOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -325,15 +391,21 @@ const radiusOptions = [
           <div class="settings-section-content">
             <div class="settings-field">
               <label class="settings-field-label">大小</label>
-              <input v-model="config.form.radio.size" type="text" class="form-input input-base" placeholder="1.25rem" />
+              <select v-model="config.form.radio.size" class="form-input input-base">
+                <option v-for="opt in checkboxSizeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
             <div class="settings-field">
               <label class="settings-field-label">边框宽度</label>
-              <input v-model="config.form.radio.borderWidth" type="text" class="form-input input-base" placeholder="1px" />
+              <select v-model="config.form.radio.borderWidth" class="form-input input-base">
+                <option v-for="opt in borderWidthOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
             <div class="settings-field">
               <label class="settings-field-label">选中圆点大小</label>
-              <input v-model="config.form.radio.dotSize" type="text" class="form-input input-base" placeholder="0.5rem" />
+              <select v-model="config.form.radio.dotSize" class="form-input input-base">
+                <option v-for="opt in radioDotSizeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -385,11 +457,15 @@ const radiusOptions = [
           <div class="settings-section-content">
             <div class="settings-field">
               <label class="settings-field-label">宽度</label>
-              <input v-model="config.form.switch.width" type="text" class="form-input input-base" placeholder="2.75rem" />
+              <select v-model="config.form.switch.width" class="form-input input-base">
+                <option v-for="opt in switchWidthOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
             <div class="settings-field">
               <label class="settings-field-label">高度</label>
-              <input v-model="config.form.switch.height" type="text" class="form-input input-base" placeholder="1.5rem" />
+              <select v-model="config.form.switch.height" class="form-input input-base">
+                <option v-for="opt in switchHeightOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -448,11 +524,13 @@ const radiusOptions = [
             <label class="preview-label">选择选项</label>
             <select class="preview-select" :style="{
               height: config.form.select.height,
+              padding: `0 ${config.form.select.paddingRight || '3rem'} 0 ${config.form.select.paddingX || '0.75rem'}`,
               borderRadius: config.form.select.radius,
               borderWidth: config.form.select.borderWidth,
               backgroundColor: config.form.select.backgroundColor,
               color: config.form.select.textColor,
               borderColor: config.form.select.borderColor,
+              backgroundPosition: `right ${config.form.select.arrowPosition || '1rem'} center`,
             }">
               <option>选项 1</option>
               <option>选项 2</option>
@@ -581,11 +659,22 @@ const radiusOptions = [
 }
 
 .preview-select {
-  padding: 0 2.5rem 0 0.75rem;
+  /* padding通过内联样式动态设置 */
   border: 1px solid;
   outline: none;
   font-family: inherit;
   transition: all 0.2s ease;
+  width: 100%;
+  cursor: pointer;
+  
+  /* 移除浏览器原生样式并添加自定义箭头 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23111827' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  /* background-position 通过内联样式动态设置 */
+  background-size: 12px;
 }
 
 .preview-select:focus {
@@ -599,6 +688,78 @@ const radiusOptions = [
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+.preview-checkbox,
+.preview-radio {
+  appearance: none;
+  flex-shrink: 0;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preview-checkbox {
+  border-color: v-bind('config.form.checkbox.borderColor');
+}
+
+.preview-checkbox:checked {
+  background-color: v-bind('config.form.checkbox.checkedBackgroundColor');
+  border-color: v-bind('config.form.checkbox.checkedBorderColor');
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.preview-radio {
+  border-radius: 50%;
+  border-color: v-bind('config.form.radio.borderColor');
+  position: relative;
+}
+
+.preview-radio:checked {
+  border-color: v-bind('config.form.radio.checkedBorderColor');
+}
+
+.preview-radio:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: v-bind('config.form.radio.dotSize');
+  height: v-bind('config.form.radio.dotSize');
+  border-radius: 50%;
+  background-color: v-bind('config.form.radio.checkedDotColor');
+}
+
+.preview-switch {
+  position: relative;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.preview-switch-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(v-bind('config.form.switch.height') - 4px);
+  height: calc(v-bind('config.form.switch.height') - 4px);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  left: 2px;
+}
+
+.preview-switch.on .preview-switch-thumb {
+  left: calc(v-bind('config.form.switch.width') - v-bind('config.form.switch.height') + 2px);
+}
+
+.form-label {
   cursor: pointer;
   font-size: 0.875rem;
   color: var(--color-text-primary);

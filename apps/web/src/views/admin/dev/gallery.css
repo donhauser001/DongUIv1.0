@@ -2,7 +2,7 @@
 .grid-5 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 @media (min-width: 1536px) {
@@ -14,7 +14,7 @@
 .grid-4 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 @media (min-width: 1280px) {
@@ -26,7 +26,7 @@
 .grid-3 {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 @media (min-width: 1280px) {
@@ -38,7 +38,7 @@
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
 }
 
 @media (min-width: 1280px) {
@@ -51,15 +51,28 @@
 .stat-card,
 .info-card,
 .preview-card {
-    background-color: #fff;
-    border: 1px solid var(--color-border);
-    border-radius: 1.5rem;
-    padding: 1.25rem;
+    background-color: var(--color-bg-primary);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--spacing-lg);
+    padding: var(--spacing-lg);
 }
 
 .stat-label {
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--color-text-secondary);
+}
+
+/* 卡片内的标签使用卡片内容色 */
+.card-white .stat-label {
+    color: var(--card-white-content-color, #6b7280);
+}
+
+.card-primary .stat-label {
+    color: var(--card-primary-content-color, white);
+}
+
+.card-dark .stat-label {
+    color: var(--card-dark-content-color, #d1d5db);
 }
 
 .stat-row {
@@ -76,13 +89,13 @@
 }
 
 .trend-pos {
-    color: #00cf3f;
+    color: var(--color-success);
     font-size: 0.75rem;
     font-weight: 500;
 }
 
 .trend-neg {
-    color: #ef4444;
+    color: var(--color-error);
     font-size: 0.75rem;
     font-weight: 500;
 }
@@ -90,21 +103,21 @@
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
 }
 
 /* New class for larger spacing between setting items */
 .settings-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 /* Settings Item - 单个设置项的容器 */
 .settings-item {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 /* Settings Subsection - 子分组 */
@@ -112,58 +125,87 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 1.25rem;
-    background-color: #f9fafb;
-    border-radius: 1rem;
-    border: 1px solid #e5e7eb;
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--card-radius, var(--radius));
+    border: var(--border-width) solid var(--color-gray-200);
 }
 
 .form-label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #111827;
-    margin-bottom: 0.25rem;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* 卡片内的表单标签使用卡片标题色 */
+.card-white .form-label {
+    color: var(--card-white-title-color, #111827);
+}
+
+.card-primary .form-label {
+    color: var(--card-primary-title-color, white);
+}
+
+.card-dark .form-label {
+    color: var(--card-dark-title-color, white);
 }
 
 /* Subsection Label - 子标题 */
 .subsection-label {
     font-size: 0.8125rem;
     font-weight: 600;
-    color: #4b5563;
-    margin-bottom: 0.5rem;
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-sm);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .form-input {
     width: 100%;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    border: 1px solid var(--color-border);
+    padding: var(--input-padding-y, var(--spacing-sm)) var(--input-padding-x, var(--spacing-md));
+    border-radius: var(--input-radius, var(--radius));
+    border: var(--input-border-width, var(--border-width)) solid var(--input-border-color, var(--color-border));
     font-size: 0.875rem;
+    background-color: var(--input-bg-color, var(--color-bg-primary));
+    color: var(--input-text-color, var(--color-text-primary));
 }
 
 /* 为 select 元素添加右侧内边距，避免箭头贴边 */
+/* 使用更大的右侧内边距，确保全圆角时箭头在圆心 */
 select.form-input {
-    padding-right: 2.5rem;
+    padding-right: var(--select-padding-right, 3rem);
+    height: var(--select-height, auto);
+    border-radius: var(--select-radius, var(--radius));
+
+    /* 移除浏览器原生样式并添加自定义箭头 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23111827' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--select-arrow-position, 1rem) center;
+    background-size: 12px;
 }
 
 .form-input:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--input-focus-border-color, var(--color-primary));
+    box-shadow: 0 0 0 2px var(--input-focus-ring-color, var(--color-primary));
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--input-focus-ring-color, var(--color-primary)) 20%, transparent 80%);
 }
 
 .form-color-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--spacing-md, 0.75rem);
 }
 
 .color-preview {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    border: 1px solid var(--color-border);
+    border: var(--border-width) solid var(--color-border);
     padding: 0;
     cursor: pointer;
     -webkit-appearance: none;
@@ -202,7 +244,7 @@ select.form-input {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    border: 1px solid var(--color-border);
+    border: var(--border-width) solid var(--color-border);
 }
 
 .table-wrapper {
@@ -213,35 +255,35 @@ select.form-input {
 
 .table-wrapper th {
     text-align: left;
-    padding: 0.5rem 0;
-    color: #6b7280;
+    padding: var(--spacing-sm) 0;
+    color: var(--color-text-secondary);
     font-weight: normal;
 }
 
 .table-wrapper td {
     padding: 0.75rem 0;
-    border-top: 1px dashed var(--color-border);
+    border-top: var(--border-width) dashed var(--color-border);
 }
 
 .status-pill {
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    border: 1px solid var(--color-border);
+    padding: var(--spacing-xs) 0.75rem;
+    border-radius: var(--tag-default-radius, var(--radius));
+    border: var(--border-width) solid var(--color-border);
     font-size: 0.75rem;
 }
 
 .status-pill.active {
-    color: #00cf3f;
-    border-color: #00cf3f;
+    color: var(--color-success);
+    border-color: var(--color-success);
 }
 
 .timeline-item {
     display: flex;
-    gap: 1rem;
+    gap: var(--spacing-md);
     align-items: flex-start;
-    border: 1px dashed var(--color-border);
-    border-radius: 1.5rem;
-    padding: 1rem;
+    border: var(--border-width) dashed var(--color-border);
+    border-radius: var(--spacing-lg);
+    padding: var(--spacing-md);
 }
 
 .timeline-time {
@@ -253,7 +295,7 @@ select.form-input {
 .section-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 /* Nav Title Reuse */
@@ -267,71 +309,72 @@ select.form-input {
 /* Tab Styles */
 .tab-group {
     display: flex;
-    gap: 0.5rem;
-    padding: 0.25rem;
-    background-color: #f3f4f6;
-    border-radius: 9999px;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs);
+    background-color: var(--color-gray-100);
+    border-radius: calc(var(--btn-primary-radius, var(--radius)) * 3);
 }
 
 .tab-btn {
     flex: 1;
-    padding: 0.5rem 1rem;
+    padding: var(--btn-primary-padding-y, var(--spacing-sm)) var(--btn-primary-padding-x, var(--spacing-md));
     background: transparent;
     border: none;
-    border-radius: 9999px;
+    border-radius: calc(var(--btn-primary-radius, var(--radius)) * 3);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     transition: all 0.2s;
 }
 
 .tab-btn:hover {
-    color: #374151;
+    color: var(--color-gray-700);
 }
 
 .tab-btn.active {
-    background-color: #ffffff;
+    background-color: var(--color-bg-primary);
     color: var(--color-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
 }
 
 .sub-tab-group {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
 }
 
 .sub-tab-btn {
-    padding: 0.5rem 1rem;
+    padding: var(--btn-outline-padding-y, var(--spacing-sm)) var(--btn-outline-padding-x, var(--spacing-md));
     background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: 9999px;
+    border: var(--btn-outline-border-width, var(--border-width)) solid var(--btn-outline-border-color, var(--color-border));
+    border-radius: calc(var(--btn-outline-radius, var(--radius)) * 3);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--btn-outline-text-color, var(--color-text-secondary));
     transition: all 0.2s;
 }
 
 .sub-tab-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: var(--btn-outline-hover-border-color, var(--color-primary));
+    color: var(--btn-outline-hover-text-color, var(--color-primary));
+    background: var(--btn-outline-hover-bg-color, transparent);
 }
 
 .sub-tab-btn.active {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
-    color: #ffffff;
+    color: var(--color-text-inverse, #ffffff);
 }
 
 /* Section Title - 增强视觉层次 */
 .section-title {
     font-size: 1rem;
     font-weight: 600;
-    color: #111827;
-    margin: 2rem 0 1rem 0;
-    padding-bottom: 0.5rem;
+    color: var(--color-text-primary);
+    margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+    padding-bottom: var(--spacing-sm);
     border-bottom: 2px solid var(--color-primary);
     display: inline-block;
 }
@@ -344,7 +387,7 @@ select.form-input {
 .preview-section {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
 }
 
 .preview-row {
@@ -355,7 +398,7 @@ select.form-input {
 
 .preview-label {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-weight: 500;
 }
 
@@ -378,10 +421,11 @@ select.form-input {
 
 /* Settings Section Card - 统一的设置组样式 */
 .settings-section-card {
-    background: #f9fafb;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid var(--color-border);
+    background: var(--color-bg-secondary);
+    padding: var(--card-padding, var(--spacing-md));
+    border-radius: var(--card-radius, var(--radius));
+    border: var(--card-border-width, var(--border-width)) solid var(--color-border);
+    box-shadow: var(--card-shadow, none);
 }
 
 .settings-section-header {
@@ -412,7 +456,7 @@ select.form-input {
 .settings-field {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--spacing-xs);
 }
 
 .settings-field-label {
@@ -420,17 +464,44 @@ select.form-input {
     color: var(--color-text-secondary);
 }
 
+/* 内联替代类 - 用于替换组件中的内联样式 */
+.settings-card-group {
+    background: var(--color-bg-secondary);
+    padding: var(--spacing-md);
+    border-radius: var(--card-radius, var(--radius));
+    border: var(--border-width) solid var(--color-border);
+}
+
+.tab-switcher {
+    display: flex;
+    gap: var(--spacing-sm);
+    background: var(--color-gray-100);
+    padding: var(--spacing-xs);
+    border-radius: calc(var(--btn-primary-radius, var(--radius)) * 2);
+    width: fit-content;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.info-card {
+    background-color: var(--card-bg-color, var(--color-bg-primary));
+    border: var(--card-border-width, var(--border-width)) solid var(--card-border-color, var(--color-border));
+    border-radius: var(--card-radius, var(--radius));
+    padding: var(--card-padding, var(--spacing-lg));
+    box-shadow: var(--card-shadow, none);
+}
+
 /* 文本式选项卡 */
 .text-tab-group {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: var(--border-width) solid var(--color-border);
     padding-bottom: 0;
 }
 
 .text-tab-btn {
-    padding: 0.5rem 0;
+    padding: var(--spacing-sm) 0;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -465,10 +536,10 @@ select.form-input {
 .component-preview-container,
 .modal-preview-container,
 .notification-preview-container {
-    margin-top: 1rem;
+    margin-top: var(--spacing-md);
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--spacing-xl);
 }
 
 /* 预览容器的直接子元素也需要 flex 布局 */
@@ -477,29 +548,55 @@ select.form-input {
 .notification-preview-container>div {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--spacing-xl);
 }
 
 .preview-item {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 1.5rem;
-    background: #ffffff;
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
+    padding: var(--card-padding, var(--spacing-lg));
+    background: var(--color-bg-primary);
+    border: var(--card-border-width, var(--border-width)) solid var(--color-border);
+    border-radius: var(--card-radius, var(--radius));
+    box-shadow: var(--card-shadow, none);
     transition: all 0.2s ease;
 }
 
 .preview-item:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-md);
 }
 
 .preview-label {
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-text-primary);
-    padding-bottom: 0.5rem;
+    padding-bottom: var(--spacing-sm);
     border-bottom: 2px solid var(--color-bg-secondary);
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.preview-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: var(--card-padding, var(--spacing-lg));
+    background: var(--color-bg-primary);
+    border: var(--card-border-width, var(--border-width)) solid var(--color-border);
+    border-radius: var(--card-radius, var(--radius));
+    box-shadow: var(--card-shadow, none);
+    transition: all 0.2s ease;
+}
+
+.preview-item:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.preview-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-bg-secondary);
+    margin-bottom: var(--spacing-sm);
 }

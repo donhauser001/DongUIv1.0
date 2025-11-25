@@ -115,26 +115,27 @@ export const themeConfig = reactive({
   },
   // 按钮样式
   button: {
+    // 全局按钮尺寸：small / medium / large
+    size: 'medium', // 'small' | 'medium' | 'large'
+    
     primary: {
-      height: 'auto', // 由内边距决定
-      paddingX: '1rem', // 16px
-      paddingY: '0.5rem', // 8px
+      // 尺寸会根据 button.size 自动应用：
+      // small: height=1.75rem, paddingX=0.75rem
+      // medium: height=2rem, paddingX=1rem  
+      // large: height=2.5rem, paddingX=1.5rem
       radius: '0.375rem',
       borderWidth: '1px',
       borderColor: 'var(--color-primary)',
       backgroundColor: 'var(--color-primary)',
       textColor: '#ffffff',
       hoverBackgroundColor: 'color-mix(in srgb, var(--color-primary), black 10%)',
-      hoverBorderColor: 'var(--color-primary)', // 默认与正常状态一致
+      hoverBorderColor: 'var(--color-primary)',
       hoverTextColor: '#ffffff',
       disabledBackgroundColor: '#d1d5db',
       disabledTextColor: '#9ca3af',
       disabledBorderColor: 'transparent',
     },
     outline: {
-      height: 'auto', // 由内边距决定
-      paddingX: '1rem',
-      paddingY: '0.5rem',
       radius: '0.375rem',
       borderWidth: '1px',
       borderColor: '#211f20',
@@ -152,7 +153,7 @@ export const themeConfig = reactive({
   input: {
     // 单行输入框
     text: {
-      height: 'auto',
+      height: '2rem',
       paddingX: '0.75rem',
       paddingY: '0.5rem',
       radius: '0.375rem',
@@ -208,8 +209,10 @@ export const themeConfig = reactive({
   form: {
     // 下拉框
     select: {
-      height: '2.5rem',
+      height: '2rem',
       paddingX: '0.75rem',
+      paddingRight: '3rem',  // 右侧内边距，确保全圆角时箭头在圆心
+      arrowPosition: '1rem', // 箭头距离右边框的距离
       radius: '0.375rem',
       borderWidth: '1px',
       backgroundColor: '#ffffff',
@@ -543,5 +546,35 @@ export const themeConfig = reactive({
         }
       }
     }
-  }
+  },
+  // 渐变配置
+  gradient: {
+    enabled: true,
+    from: 'color-mix(in srgb, var(--color-primary) 10%, white 90%)',
+    to: 'color-mix(in srgb, var(--color-primary) 20%, white 80%)',
+    direction: 'to bottom right', // 'to bottom right' | 'to right' | 'to bottom' | 'to left' | 'to top'
+  },
+  // 间距配置
+  spacing: {
+    '0': '0',
+    'xs': '0.25rem',   // 4px
+    'sm': '0.5rem',    // 8px
+    'md': '1rem',      // 16px
+    'lg': '1.5rem',    // 24px
+    'xl': '2rem',      // 32px
+    '2xl': '2.5rem',   // 40px
+    '3xl': '3rem',     // 48px
+    '4xl': '4rem',     // 64px
+  },
+  // 阴影配置
+  shadows: {
+    none: 'none',
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+  },
 })
+

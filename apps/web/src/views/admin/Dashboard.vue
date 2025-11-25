@@ -128,8 +128,8 @@ const recentDocs = [
 }
 
 .stat-card {
-  padding: 1.5rem;
-  border-radius: var(--radius);
+  padding: var(--card-padding, 1.5rem);
+  border-radius: var(--card-radius, var(--radius));
   border-width: var(--border-width);
   border-style: solid;
   box-shadow: var(--card-shadow);
@@ -138,7 +138,7 @@ const recentDocs = [
 .card-primary {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
-  color: white;
+  color: var(--color-text-inverse, white);
 }
 
 .card-white {
@@ -192,18 +192,18 @@ const recentDocs = [
 }
 
 .trend-light {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: color-mix(in srgb, white 20%, transparent 80%);
   color: white;
 }
 
 .trend-success {
-  background-color: rgba(16, 185, 129, 0.1);
+  background-color: color-mix(in srgb, var(--color-success) 10%, transparent 90%);
   color: var(--color-success);
 }
 
 .feature-section {
   border: var(--border-width) solid var(--color-info);
-  border-radius: var(--radius);
+  border-radius: var(--card-radius, var(--radius));
   overflow: hidden;
   opacity: 0.8;
 }
@@ -282,12 +282,12 @@ const recentDocs = [
 }
 
 .status-success {
-  background-color: rgba(16, 185, 129, 0.1);
+  background-color: color-mix(in srgb, var(--color-success) 10%, transparent 90%);
   color: var(--color-success);
 }
 
 .status-warning {
-  background-color: rgba(245, 158, 11, 0.1);
+  background-color: color-mix(in srgb, var(--color-warning) 10%, transparent 90%);
   color: var(--color-warning);
 }
 

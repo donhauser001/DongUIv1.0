@@ -6,7 +6,7 @@
       <p class="text-gray-600 mb-8">抱歉，您访问的页面不存在或已被删除。</p>
       <button
         @click="goHome"
-        class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors"
+        class="btn-primary"
       >
         返回首页
       </button>

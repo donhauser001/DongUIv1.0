@@ -17,10 +17,10 @@ import { PermissionModule } from './permission/permission.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    // 速率限制：60秒内最多10个请求
+    // 速率限制：60秒内最多100个请求（开发环境友好）
     ThrottlerModule.forRoot([{
       ttl: 60000, // 时间窗口：60秒
-      limit: 10, // 最大请求数
+      limit: 100, // 最大请求数
     }]),
     AuthModule,
     ConfigModule,

@@ -141,7 +141,7 @@ const saveConfig = async () => {
 
   const resetToDefault = async () => {
     if (!config.value) return
-    if (confirm('确定恢复到默认主题吗？当前修改将不会保存。')) {
+    if (confirm('确定恢复到默认主题吗？这将清除所有自定义配置，并保存到数据库。')) {
       // Create a fresh copy of default config
       const freshConfig = JSON.parse(JSON.stringify(themeConfig))
       
@@ -184,6 +184,18 @@ const saveConfig = async () => {
       
       // 使用统一的颜色初始化函数
       initializeColorsFromPrimary(config.value, primaryColor)
+      
+      // 自动保存到数据库，确保默认配置被持久化
+      try {
+        loading.value = true
+        await saveRemoteThemeConfig(config.value)
+        alert('已成功恢复默认配置并保存！')
+      } catch (error) {
+        console.error('保存默认配置失败:', error)
+        alert('恢复默认成功，但保存到数据库失败。请手动点击"保存配置"按钮。')
+      } finally {
+        loading.value = false
+      }
       
       applyTheme(config.value)
     }
@@ -279,16 +291,16 @@ const saveConfig = async () => {
 .gallery-layout {
   display: flex;
   height: calc(100vh - 120px);
-  background-color: #fff;
-  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius);
   overflow: hidden;
 }
 
 .gallery-sidebar {
   width: 15rem;
-  background-color: #f9fafb; /* gray-50 */
-  border-right: 1px solid var(--color-border);
+  background-color: var(--color-gray-50);
+  border-right: var(--border-width) solid var(--color-border);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -296,9 +308,9 @@ const saveConfig = async () => {
 
 .sidebar-header {
   height: 5rem;
-  padding: 0 1rem;
-  border-bottom: 1px solid var(--color-border);
-  background-color: #ffffff; /* gray-50 */
+  padding: 0 var(--spacing-md);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg-primary);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -306,21 +318,21 @@ const saveConfig = async () => {
 
 .sidebar-title {
   font-weight: bold;
-  color: #1f2937; /* gray-800 */
+  color: var(--color-gray-800);
   display: flex;
   align-items: center;
 }
 
 .icon-primary {
-  margin-right: 0.5rem;
+  margin-right: var(--spacing-sm);
   color: var(--color-primary);
 }
 
 .sidebar-desc {
   font-size: 0.75rem;
-  color: #6b7280; /* gray-500 */
-  margin-top: 0.25rem;
-  margin-bottom: 0; /* Remove bottom margin */
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
+  margin-bottom: 0;
 }
 
 .sidebar-nav {
@@ -329,43 +341,44 @@ const saveConfig = async () => {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .nav-group-title {
   font-size: 0.75rem;
-  color: #9ca3af;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  padding-left: 1rem;
+  color: var(--color-gray-400);
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  padding-left: var(--spacing-md);
   font-weight: 600;
 }
 
 .nav-btn {
   width: 100%;
   text-align: left;
-  padding: 0.75rem 1rem;
-  border-radius: 1.5rem; /* rounded-3xl */
+  padding: 0.75rem var(--spacing-md);
+  border-radius: var(--btn-outline-radius, var(--radius));
   transition: all 0.2s;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  border: 1px solid var(--color-border);
+  border: var(--btn-outline-border-width, var(--border-width)) solid var(--btn-outline-border-color, var(--color-border));
   background-color: transparent;
   cursor: pointer;
-  color: #4b5563; /* gray-600 */
+  color: var(--btn-outline-text-color, var(--color-gray-600));
 }
 
 .nav-btn:hover {
-  background-color: #fff;
-  color: #111827; /* gray-900 */
+  background-color: var(--btn-outline-hover-bg-color, var(--color-bg-primary));
+  color: var(--btn-outline-hover-text-color, var(--color-text-primary));
+  border-color: var(--btn-outline-hover-border-color, var(--color-border));
 }
 
 .nav-btn-active {
-  background-color: #fff;
+  background-color: var(--color-bg-primary);
   color: var(--color-primary);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-color: var(--color-primary); /* Optional enhancement */
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-primary);
 }
 
 .nav-icon {
@@ -386,7 +399,7 @@ const saveConfig = async () => {
 
 .nav-desc {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -399,26 +412,26 @@ const saveConfig = async () => {
 
 .main-header {
   height: 5rem;
-  background-color: #fff;
-  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  border-bottom: var(--border-width) solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
+  padding: 0 var(--spacing-xl);
 }
 
 .header-subtitle {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  margin-top: 1rem; /* Add top margin */
+  margin-top: var(--spacing-md);
 }
 
 .header-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-text-primary);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -426,7 +439,7 @@ const saveConfig = async () => {
 
 .header-desc {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   font-weight: normal;
 }
 
@@ -437,47 +450,62 @@ const saveConfig = async () => {
 }
 
 .action-btn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  border: 1px solid var(--color-border);
+  height: var(--btn-outline-height, 2rem);
+  padding: 0 var(--btn-outline-padding-x, var(--spacing-lg));
+  border-radius: var(--btn-outline-radius, var(--radius));
+  border: var(--btn-outline-border-width, var(--border-width)) solid var(--btn-outline-border-color, var(--color-border));
   font-size: 0.875rem;
-  color: #374151;
-  background-color: #fff;
+  color: var(--btn-outline-text-color, var(--color-gray-700));
+  background-color: var(--btn-outline-bg-color, var(--color-bg-primary));
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .action-btn:hover {
-  background-color: #f9fafb;
+  background-color: var(--btn-outline-hover-bg-color, var(--color-bg-secondary));
+  color: var(--btn-outline-hover-text-color, var(--color-text-primary));
+  border-color: var(--btn-outline-hover-border-color, var(--color-border));
 }
 
 .action-btn.btn-primary {
-  background-color: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
+  height: var(--btn-primary-height, 2rem);
+  padding: 0 var(--btn-primary-padding-x, var(--spacing-lg));
+  background-color: var(--btn-primary-bg-color, var(--color-primary));
+  color: var(--btn-primary-text-color, #ffffff);
+  border-color: var(--btn-primary-border-color, var(--color-primary));
+  border-radius: var(--btn-primary-radius, var(--radius));
+}
+
+.action-btn.btn-primary:hover {
+  background-color: var(--btn-primary-hover-bg-color, color-mix(in srgb, var(--color-primary), black 10%));
+  color: var(--btn-primary-hover-text-color, #ffffff);
+  border-color: var(--btn-primary-hover-border-color, var(--color-primary));
 }
 
 .action-btn:disabled {
-  opacity: 0.6;
+  opacity: var(--opacity-60);
   cursor: not-allowed;
 }
 
 .main-content {
   flex: 1;
   overflow: auto;
-  background-color: #f9fafb;
-  padding: 1.5rem;
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-lg);
 }
 
 .loading-state {
   height: 100%;
-  border: 1px dashed var(--color-border);
-  border-radius: 1.5rem;
+  border: var(--border-width) dashed var(--color-border);
+  border-radius: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .spinner {
@@ -487,7 +515,7 @@ const saveConfig = async () => {
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-sm);
 }
 
 @keyframes spin {
@@ -497,6 +525,17 @@ const saveConfig = async () => {
 .content-sections {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
+}
+
+.loading::after {
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--spacing-sm);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>

@@ -320,10 +320,10 @@ const handleImageUpload = async (file: File): Promise<string> => {
 }
 
 .info-card {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
+  background: var(--color-bg-primary, #fff);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--card-radius, var(--radius));
+  padding: var(--card-padding, 1.5rem);
 }
 
 .card-title {
@@ -381,8 +381,8 @@ const handleImageUpload = async (file: File): Promise<string> => {
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--card-radius, var(--radius));
   cursor: pointer;
   transition: all 0.2s;
   font-size: 0.875rem;
@@ -454,11 +454,11 @@ const handleImageUpload = async (file: File): Promise<string> => {
 }
 
 .api-docs code {
-  padding: 0.125rem 0.375rem;
+  padding: var(--spacing-xs, 0.125rem) var(--spacing-xs, 0.375rem);
   background: var(--color-bg-tertiary);
-  border-radius: 0.25rem;
+  border-radius: calc(var(--radius) * 0.5);
   font-family: monospace;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-sm, 0.8125rem);
   color: var(--color-primary);
 }
 </style>

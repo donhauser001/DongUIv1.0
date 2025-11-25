@@ -117,7 +117,7 @@ watch(() => props.modelValue, (newValue) => {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: var(--spacing-md, 1rem);
 }
 
 .modal-overlay::before {
@@ -127,7 +127,7 @@ watch(() => props.modelValue, (newValue) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--modal-overlay-color, rgba(0, 0, 0, 0.5));
+  background: var(--modal-overlay-color, color-mix(in srgb, black 50%, transparent 50%));
   opacity: var(--modal-overlay-opacity, 1);
   backdrop-filter: blur(var(--modal-overlay-blur, 4px));
 }
@@ -136,7 +136,7 @@ watch(() => props.modelValue, (newValue) => {
   position: relative;
   background: var(--modal-bg-color, var(--color-bg-primary));
   border-radius: var(--modal-radius, var(--radius));
-  box-shadow: var(--modal-shadow, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04));
+  box-shadow: var(--modal-shadow, var(--shadow-xl));
   width: 100%;
   max-height: 90vh;
   display: flex;
@@ -180,10 +180,10 @@ watch(() => props.modelValue, (newValue) => {
 .modal-close {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: var(--font-h2-size, 1.5rem);
   color: var(--color-text-secondary);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: var(--spacing-xs, 0.25rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,7 +206,7 @@ watch(() => props.modelValue, (newValue) => {
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
+  gap: var(--spacing-sm, 0.75rem);
   padding: var(--modal-footer-padding, 1.5rem);
   border-top: var(--modal-footer-border-top, var(--border-width) solid var(--color-border));
   background: var(--modal-footer-bg-color, transparent);
@@ -217,11 +217,11 @@ watch(() => props.modelValue, (newValue) => {
 .btn-outline {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm, 0.5rem);
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--font-body-size, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
 }
 
 .btn-primary {
@@ -230,18 +230,18 @@ watch(() => props.modelValue, (newValue) => {
   border-radius: var(--btn-primary-radius, var(--radius));
   border: var(--btn-primary-border-width, var(--border-width)) solid var(--btn-primary-border-color, var(--color-primary));
   background: var(--btn-primary-bg-color, var(--color-primary));
-  color: var(--btn-primary-text-color, #ffffff);
+  color: var(--btn-primary-text-color, var(--color-text-inverse, #ffffff));
 }
 
 .btn-primary:hover:not(:disabled) {
   background: var(--btn-primary-hover-bg-color, color-mix(in srgb, var(--color-primary), black 10%));
-  color: var(--btn-primary-hover-text-color, #ffffff);
+  color: var(--btn-primary-hover-text-color, var(--color-text-inverse, #ffffff));
   border-color: var(--btn-primary-hover-border-color, var(--color-primary));
 }
 
 .btn-primary:disabled {
-  background: var(--btn-primary-disabled-bg-color, #e5e7eb);
-  color: var(--btn-primary-disabled-text-color, #9ca3af);
+  background: var(--btn-primary-disabled-bg-color, var(--color-gray-200));
+  color: var(--btn-primary-disabled-text-color, var(--color-gray-400));
   border-color: var(--btn-primary-disabled-border-color, transparent);
   cursor: not-allowed;
 }
@@ -263,8 +263,8 @@ watch(() => props.modelValue, (newValue) => {
 
 .btn-outline:disabled {
   background: var(--btn-outline-disabled-bg-color, transparent);
-  color: var(--btn-outline-disabled-text-color, #9ca3af);
-  border-color: var(--btn-outline-disabled-border-color, #e5e7eb);
+  color: var(--btn-outline-disabled-text-color, var(--color-gray-400));
+  border-color: var(--btn-outline-disabled-border-color, var(--color-gray-200));
   cursor: not-allowed;
 }
 

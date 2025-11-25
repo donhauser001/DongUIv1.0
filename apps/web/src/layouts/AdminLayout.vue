@@ -214,7 +214,7 @@ const logoMarginStyle = computed(() => {
     <!-- Main Content -->
     <main class="layout-main">
       <header class="layout-header">
-        <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: var(--spacing-md, 1rem);">
           <button class="header-btn" @click="toggleSidebar">
             <span :class="isCollapsed ? 'i-carbon-menu' : 'i-carbon-menu'"></span>
           </button>
@@ -264,7 +264,7 @@ const logoMarginStyle = computed(() => {
   height: var(--layout-header-height);
   display: flex;
   align-items: center;
-  padding: 0 1.5rem;
+  padding: 0 var(--spacing-lg, 1.5rem);
   border-bottom: var(--border-width) solid var(--sidebar-border-color);
   flex-shrink: 0;
 }
@@ -275,9 +275,9 @@ const logoMarginStyle = computed(() => {
 }
 
 .sidebar-logo-wrapper {
-  width: 2rem;
-  height: 2rem;
-  /* margin-right: 0.75rem; Removed default margin to allow override */
+  width: var(--spacing-xl, 2rem);
+  height: var(--spacing-xl, 2rem);
+  /* margin-right: var(--spacing-sm, 0.75rem); Removed default margin to allow override */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,15 +291,15 @@ const logoMarginStyle = computed(() => {
 }
 
 .sidebar-logo-placeholder {
-  width: 2rem;
-  height: 2rem;
+  width: var(--spacing-xl, 2rem);
+  height: var(--spacing-xl, 2rem);
   border-radius: var(--radius);
   background-color: var(--color-primary);
-  /* margin-right: 0.75rem; Removed default margin */
+  /* margin-right: var(--spacing-sm, 0.75rem); Removed default margin */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-text-inverse, #fff);
   flex-shrink: 0; /* Prevent placeholder shrinking */
 }
 
@@ -323,9 +323,9 @@ const logoMarginStyle = computed(() => {
 }
 
 .sidebar-tagline {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   color: var(--color-text-secondary);
-  margin-top: 0.125rem;
+  margin-top: var(--spacing-xs, 0.125rem);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -334,11 +334,11 @@ const logoMarginStyle = computed(() => {
 
 .sidebar-nav {
   flex: 1;
-  padding: 1rem;
+  padding: var(--spacing-md, 1rem);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--spacing-xs, 0.25rem);
 }
 
 .menu-item {
@@ -369,8 +369,8 @@ const logoMarginStyle = computed(() => {
 }
 
 .menu-icon {
-  font-size: 1.125rem;
-  margin-right: 0.75rem;
+  font-size: var(--font-h4-size, 1.125rem);
+  margin-right: var(--spacing-sm, 0.75rem);
 }
 
 .menu-item-collapsed {
@@ -380,7 +380,7 @@ const logoMarginStyle = computed(() => {
 
 .menu-item-collapsed .menu-icon {
   margin-right: 0;
-  font-size: 1.25rem;
+  font-size: var(--font-h3-size, 1.25rem);
 }
 
 .menu-item-collapsed .menu-label {
@@ -393,8 +393,8 @@ const logoMarginStyle = computed(() => {
 }
 
 .user-profile-collapsed .user-avatar {
-  width: 2rem;
-  height: 2rem;
+  width: var(--spacing-xl, 2rem);
+  height: var(--spacing-xl, 2rem);
 }
 
 .menu-parent {
@@ -413,7 +413,7 @@ const logoMarginStyle = computed(() => {
 }
 
 .menu-arrow {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm, 0.75rem);
   transition: transform 0.2s;
 }
 
@@ -422,18 +422,18 @@ const logoMarginStyle = computed(() => {
 }
 
 .submenu-container {
-  margin-left: 1rem;
-  padding-left: 1rem;
-  border-left: 1px solid var(--color-border);
-  margin-top: 0.25rem;
+  margin-left: var(--spacing-md, 1rem);
+  padding-left: var(--spacing-md, 1rem);
+  border-left: var(--border-width, 1px) solid var(--color-border);
+  margin-top: var(--spacing-xs, 0.25rem);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--spacing-xs, 0.25rem);
 }
 
 .submenu-item {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
   border-radius: var(--radius);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);

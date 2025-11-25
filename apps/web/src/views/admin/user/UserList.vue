@@ -45,9 +45,9 @@ const passwordStrength = computed(() => {
   if (/\d/.test(password)) strength++
   if (/[^a-zA-Z0-9]/.test(password)) strength++
   
-  if (strength <= 2) return { level: strength, text: '弱', color: '#ef4444' }
-  if (strength <= 3) return { level: strength, text: '中', color: '#f59e0b' }
-  return { level: strength, text: '强', color: '#10b981' }
+  if (strength <= 2) return { level: strength, text: '弱', color: 'var(--color-error)' }
+  if (strength <= 3) return { level: strength, text: '中', color: 'var(--color-warning)' }
+  return { level: strength, text: '强', color: 'var(--color-success)' }
 })
 
 // 加载角色列表

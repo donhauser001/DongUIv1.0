@@ -10,8 +10,8 @@ export declare class ConfigController {
     }): Promise<{
         id: string;
         key: string;
+        value: import("@prisma/client/runtime/library").JsonValue;
         description: string | null;
         updatedAt: Date;
-        value: import("@prisma/client/runtime/library").JsonValue;
     }>;
 }
