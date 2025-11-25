@@ -12,19 +12,44 @@ datasource db {
   extensions = [vector] // 启用 pgvector 扩展
 }
 
-// 用户表 - 基础 RBAC 准备
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// 角色表
+model Role {
+  id          String   @id @default(uuid())
+  name        String   // 角色名称，如"超级管理员"
+  key         String   @unique // 角色标识，如"SUPER_ADMIN"
+  description String?  // 角色描述
+  isSystem    Boolean  @default(false) // 是否为系统角色（系统角色不可删除）
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  users       User[]           // 关联的用户
+  permissions RolePermission[] // 关联的权限
+  
+  @@index([key])
 }
 
-enum Role {
-  USER
-  ADMIN
+// 用户表 - 基础 RBAC 准备
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  phone     String?   // 手机号
+  password  String    // 密码哈希
+  avatar    String?   // 头像 URL 或 Base64
+  gender    String?   // 性别：male/female/other
+  birthday  DateTime? // 生日
+  address   String?   // 地址
+  bio       String?   // 个人简介
+  roleId    String    // 角色ID
+  role      Role      @relation(fields: [roleId], references: [id])
+  status    Boolean   @default(true) // true: 启用, false: 禁用
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  @@index([email])
+  @@index([roleId])
+  @@index([createdAt])
+  @@index([status])
 }
 
 // AI 知识库文档表 - 核心高并发/AI 场景
@@ -46,4 +71,37 @@ model SystemConfig {
   value       Json     // 配置内容，存储完整的 themeConfig 对象
   description String?
   updatedAt   DateTime @updatedAt
+  
+  @@index([key])
+}
+
+// 权限表
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   // 权限名称，如"用户管理"
+  key         String   @unique // 权限标识，如"user:read"
+  resource    String   // 资源，如"user", "role", "config"
+  action      String   // 操作，如"create", "read", "update", "delete"
+  description String?  // 权限描述
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  roles       RolePermission[] // 关联的角色
+  
+  @@index([key])
+  @@index([resource])
+}
+
+// 角色-权限关联表（多对多）
+model RolePermission {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime @default(now())
+  
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  
+  @@id([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
 }

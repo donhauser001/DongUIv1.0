@@ -21,42 +21,84 @@ const initializeFormColors = (primaryColor: string, force = false) => {
   if (!primaryColor || !primaryColor.startsWith('#')) return
   
   // 下拉框
-  if (force || !props.config.form?.select?.focusBorderColor || props.config.form.select.focusBorderColor.startsWith('var')) {
+  if (force || !props.config.form?.select?.focusBorderColor || 
+      props.config.form.select.focusBorderColor === '' || 
+      props.config.form.select.focusBorderColor.includes('var(')) {
     props.config.form.select.focusBorderColor = primaryColor
   }
+  if (force || !props.config.form?.select?.focusRingColor || 
+      props.config.form.select.focusRingColor === '' || 
+      props.config.form.select.focusRingColor.includes('var(')) {
+    props.config.form.select.focusRingColor = primaryColor
+  }
+  
   // 复选框
-  if (force || !props.config.form?.checkbox?.checkedBackgroundColor || props.config.form.checkbox.checkedBackgroundColor.startsWith('var')) {
+  if (force || !props.config.form?.checkbox?.checkedBackgroundColor || 
+      props.config.form.checkbox.checkedBackgroundColor === '' || 
+      props.config.form.checkbox.checkedBackgroundColor.includes('var(')) {
     props.config.form.checkbox.checkedBackgroundColor = primaryColor
   }
-  if (force || !props.config.form?.checkbox?.checkedBorderColor || props.config.form.checkbox.checkedBorderColor.startsWith('var')) {
+  if (force || !props.config.form?.checkbox?.checkedBorderColor || 
+      props.config.form.checkbox.checkedBorderColor === '' || 
+      props.config.form.checkbox.checkedBorderColor.includes('var(')) {
     props.config.form.checkbox.checkedBorderColor = primaryColor
   }
+  
   // 单选框
-  if (force || !props.config.form?.radio?.checkedBorderColor || props.config.form.radio.checkedBorderColor.startsWith('var')) {
+  if (force || !props.config.form?.radio?.checkedBorderColor || 
+      props.config.form.radio.checkedBorderColor === '' || 
+      props.config.form.radio.checkedBorderColor.includes('var(')) {
     props.config.form.radio.checkedBorderColor = primaryColor
   }
-  if (force || !props.config.form?.radio?.checkedDotColor || props.config.form.radio.checkedDotColor.startsWith('var')) {
+  if (force || !props.config.form?.radio?.checkedDotColor || 
+      props.config.form.radio.checkedDotColor === '' || 
+      props.config.form.radio.checkedDotColor.includes('var(')) {
     props.config.form.radio.checkedDotColor = primaryColor
   }
+  
   // 开关
-  if (force || !props.config.form?.switch?.onBackgroundColor || props.config.form.switch.onBackgroundColor.startsWith('var')) {
+  if (force || !props.config.form?.switch?.onBackgroundColor || 
+      props.config.form.switch.onBackgroundColor === '' || 
+      props.config.form.switch.onBackgroundColor.includes('var(')) {
     props.config.form.switch.onBackgroundColor = primaryColor
   }
 }
 
-// 监听全局主色变化，初始化表单元素颜色
-watch(() => props.config.colors?.primary, (newPrimary) => {
-  if (newPrimary) {
-    initializeFormColors(newPrimary, false)
+// 监听全局主色变化 - 主色变化时更新所有表单颜色
+watch(() => props.config.colors?.primary, (newPrimary, oldPrimary) => {
+  if (newPrimary && newPrimary.startsWith('#')) {
+    // 如果主色发生变化，强制更新所有表单颜色
+    if (oldPrimary && oldPrimary !== newPrimary) {
+      initializeFormColors(newPrimary, true)
+    } else {
+      // 首次加载时，检查是否需要初始化
+      initializeFormColors(newPrimary, false)
+    }
   }
-}, { immediate: true })
+}, { immediate: true, deep: true })
 
-// 监听表单配置变化，如果发现是 var() 就强制重新初始化
-watch(() => props.config.form?.select?.focusBorderColor, (newValue) => {
-  if (newValue && newValue.startsWith('var') && props.config.colors?.primary) {
-    initializeFormColors(props.config.colors.primary, true)
+// 检测到 var() 值时强制初始化 - 确保页面加载时替换 var() 值
+watch(() => [
+  props.config.form?.select?.focusBorderColor,
+  props.config.form?.select?.focusRingColor,
+  props.config.form?.checkbox?.checkedBackgroundColor,
+  props.config.form?.checkbox?.checkedBorderColor,
+  props.config.form?.radio?.checkedBorderColor,
+  props.config.form?.radio?.checkedDotColor,
+  props.config.form?.switch?.onBackgroundColor
+], (newValues) => {
+  const primaryColor = props.config.colors?.primary
+  if (primaryColor && primaryColor.startsWith('#')) {
+    // 检查是否有任何值包含 var()
+    const hasVarValues = newValues.some(val => val && typeof val === 'string' && val.includes('var('))
+    if (hasVarValues) {
+      // 延迟执行，确保 config 已完全加载
+      setTimeout(() => {
+        initializeFormColors(primaryColor, true)
+      }, 0)
+    }
   }
-})
+}, { immediate: true, deep: true })
 
 const sizeOptions = [
   { label: '小 (2rem)', value: '2rem' },
@@ -65,7 +107,7 @@ const sizeOptions = [
 ]
 
 const radiusOptions = [
-  { label: '无圆角 (0px)', value: '0px' },
+  { label: '无圆角 (0)', value: '0' },
   { label: '小 (0.25rem)', value: '0.25rem' },
   { label: '标准 (0.375rem)', value: '0.375rem' },
   { label: '大 (0.5rem)', value: '0.5rem' },
@@ -75,6 +117,7 @@ const radiusOptions = [
 
 <template>
   <section class="grid-2">
+    <!-- 左侧：设置区域 -->
     <div class="info-card settings-group">
       <!-- 组件类型切换 -->
       <div style="display: flex; gap: 0.5rem; background: #f3f4f6; padding: 0.25rem; border-radius: 0.5rem; width: fit-content; margin-bottom: 1.5rem; flex-wrap: wrap;">
@@ -89,8 +132,8 @@ const radiusOptions = [
           {{ comp.name }}
         </button>
       </div>
-      
-      <!-- 表单类型子切换 -->
+
+      <!-- 表单类型切换 -->
       <div class="text-tab-group">
         <button
           @click="activeFormType = 'select'"
@@ -123,311 +166,367 @@ const radiusOptions = [
       </div>
 
       <!-- 下拉框设置 -->
-      <div v-if="activeFormType === 'select'" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <template v-if="activeFormType === 'select'">
         <!-- 尺寸与形状 -->
-        <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-            <label class="form-label" style="font-weight: 600; margin: 0;">尺寸与形状</label>
-            <span class="stat-label">下拉框的基础尺寸设置</span>
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">尺寸与形状</h4>
+              <p class="settings-section-desc">设置下拉框的基础尺寸</p>
+            </div>
           </div>
-          <div class="grid-2" style="gap: 0.75rem;">
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">高度</label>
-              <select v-model="config.form.select.height" class="form-input">
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">高度</label>
+              <select v-model="config.form.select.height" class="form-input input-base">
                 <option v-for="opt in sizeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
               </select>
             </div>
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">圆角</label>
-              <select v-model="config.form.select.radius" class="form-input">
+            <div class="settings-field">
+              <label class="settings-field-label">圆角</label>
+              <select v-model="config.form.select.radius" class="form-input input-base">
                 <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
               </select>
             </div>
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">边框宽度</label>
-              <input v-model="config.form.select.borderWidth" type="text" class="form-input" />
+            <div class="settings-field">
+              <label class="settings-field-label">边框宽度</label>
+              <input v-model="config.form.select.borderWidth" type="text" class="form-input input-base" placeholder="1px" />
             </div>
           </div>
         </div>
 
-        <!-- 颜色 -->
-        <div class="form-group" style="background: #f9fafb; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--color-border);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-            <label class="form-label" style="font-weight: 600; margin: 0;">颜色</label>
-            <span class="stat-label">下拉框的颜色配置</span>
+        <!-- 颜色设置 -->
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">颜色设置</h4>
+              <p class="settings-section-desc">设置下拉框的颜色配置</p>
+            </div>
           </div>
-          <div class="grid-2" style="gap: 0.75rem;">
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">背景颜色</label>
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">背景颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.select.backgroundColor" type="color" class="color-preview" />
-                <input v-model="config.form.select.backgroundColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.select.backgroundColor" type="text" class="form-input color-text" placeholder="#ffffff" />
               </div>
             </div>
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">文字颜色</label>
+            <div class="settings-field">
+              <label class="settings-field-label">文字颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.select.textColor" type="color" class="color-preview" />
-                <input v-model="config.form.select.textColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.select.textColor" type="text" class="form-input color-text" placeholder="#111827" />
               </div>
             </div>
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">边框颜色</label>
+            <div class="settings-field">
+              <label class="settings-field-label">边框颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.select.borderColor" type="color" class="color-preview" />
-                <input v-model="config.form.select.borderColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.select.borderColor" type="text" class="form-input color-text" placeholder="#e5e7eb" />
               </div>
             </div>
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">聚焦边框颜色</label>
+            <div class="settings-field">
+              <label class="settings-field-label">聚焦边框颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.select.focusBorderColor" type="color" class="color-preview" />
-                <input v-model="config.form.select.focusBorderColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.select.focusBorderColor" type="text" class="form-input color-text" placeholder="#03624C" />
               </div>
             </div>
-            <div class="form-group" style="gap: 0.25rem;">
-              <label class="stat-label">聚焦光圈颜色</label>
+            <div class="settings-field">
+              <label class="settings-field-label">聚焦光圈颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.select.focusRingColor" type="color" class="color-preview" />
-                <input v-model="config.form.select.focusRingColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.select.focusRingColor" type="text" class="form-input color-text" placeholder="#03624C" />
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
 
       <!-- 复选框设置 -->
-      <div v-else-if="activeFormType === 'checkbox'" class="settings-group">
-        <h5 class="section-title">尺寸与形状</h5>
-        <div class="grid-2" style="gap: 1rem;">
-          <div class="form-group">
-            <label class="form-label">大小</label>
-            <input v-model="config.form.checkbox.size" type="text" class="form-input" placeholder="1.25rem" />
+      <template v-else-if="activeFormType === 'checkbox'">
+        <!-- 尺寸与形状 -->
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">尺寸与形状</h4>
+              <p class="settings-section-desc">设置复选框的基础尺寸</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">圆角</label>
-            <select v-model="config.form.checkbox.radius" class="form-input">
-              <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">边框宽度</label>
-            <input v-model="config.form.checkbox.borderWidth" type="text" class="form-input" />
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">大小</label>
+              <input v-model="config.form.checkbox.size" type="text" class="form-input input-base" placeholder="1.25rem" />
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">圆角</label>
+              <select v-model="config.form.checkbox.radius" class="form-input input-base">
+                <option v-for="opt in radiusOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">边框宽度</label>
+              <input v-model="config.form.checkbox.borderWidth" type="text" class="form-input input-base" placeholder="1px" />
+            </div>
           </div>
         </div>
 
-        <h5 class="section-title">颜色</h5>
-        <div class="grid-2" style="gap: 1rem;">
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">未选中边框颜色</label>
+        <!-- 颜色设置 -->
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">颜色设置</h4>
+              <p class="settings-section-desc">设置复选框的颜色配置</p>
+            </div>
+          </div>
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">未选中边框颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.checkbox.borderColor" type="color" class="color-preview" />
-                <input v-model="config.form.checkbox.borderColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.checkbox.borderColor" type="text" class="form-input color-text" placeholder="#d1d5db" />
               </div>
-          </div>
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">选中背景颜色</label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">选中背景颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.checkbox.checkedBackgroundColor" type="color" class="color-preview" />
-                <input v-model="config.form.checkbox.checkedBackgroundColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.checkbox.checkedBackgroundColor" type="text" class="form-input color-text" placeholder="#03624C" />
               </div>
-          </div>
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">选中边框颜色</label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">选中边框颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.checkbox.checkedBorderColor" type="color" class="color-preview" />
-                <input v-model="config.form.checkbox.checkedBorderColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.checkbox.checkedBorderColor" type="text" class="form-input color-text" placeholder="#03624C" />
               </div>
-          </div>
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">勾选标记颜色</label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">勾选标记颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.checkbox.checkmarkColor" type="color" class="color-preview" />
-                <input v-model="config.form.checkbox.checkmarkColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.checkbox.checkmarkColor" type="text" class="form-input color-text" placeholder="#ffffff" />
               </div>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
 
       <!-- 单选框设置 -->
-      <div v-else-if="activeFormType === 'radio'" class="settings-group">
-        <h5 class="section-title">尺寸</h5>
-        <div class="grid-2" style="gap: 1rem;">
-          <div class="form-group">
-            <label class="form-label">大小</label>
-            <input v-model="config.form.radio.size" type="text" class="form-input" placeholder="1.25rem" />
+      <template v-else-if="activeFormType === 'radio'">
+        <!-- 尺寸与形状 -->
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">尺寸与形状</h4>
+              <p class="settings-section-desc">设置单选框的基础尺寸</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">边框宽度</label>
-            <input v-model="config.form.radio.borderWidth" type="text" class="form-input" />
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">大小</label>
+              <input v-model="config.form.radio.size" type="text" class="form-input input-base" placeholder="1.25rem" />
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">边框宽度</label>
+              <input v-model="config.form.radio.borderWidth" type="text" class="form-input input-base" placeholder="1px" />
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">选中圆点大小</label>
+              <input v-model="config.form.radio.dotSize" type="text" class="form-input input-base" placeholder="0.5rem" />
+            </div>
           </div>
         </div>
 
-        <h5 class="section-title">颜色</h5>
-        <div class="grid-2" style="gap: 1rem;">
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">未选中边框颜色</label>
+        <!-- 颜色设置 -->
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">颜色设置</h4>
+              <p class="settings-section-desc">设置单选框的颜色配置</p>
+            </div>
+          </div>
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">未选中边框颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.radio.borderColor" type="color" class="color-preview" />
-                <input v-model="config.form.radio.borderColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.radio.borderColor" type="text" class="form-input color-text" placeholder="#d1d5db" />
               </div>
-          </div>
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">选中边框颜色</label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">选中边框颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.radio.checkedBorderColor" type="color" class="color-preview" />
-                <input v-model="config.form.radio.checkedBorderColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.radio.checkedBorderColor" type="text" class="form-input color-text" placeholder="#03624C" />
               </div>
-          </div>
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">选中圆点颜色</label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">选中圆点颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.radio.checkedDotColor" type="color" class="color-preview" />
-                <input v-model="config.form.radio.checkedDotColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.radio.checkedDotColor" type="text" class="form-input color-text" placeholder="#03624C" />
               </div>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
 
       <!-- 开关设置 -->
-      <div v-else-if="activeFormType === 'switch'" class="settings-group">
-        <h5 class="section-title">尺寸</h5>
-        <div class="grid-2" style="gap: 1rem;">
-          <div class="form-group">
-            <label class="form-label">宽度</label>
-            <input v-model="config.form.switch.width" type="text" class="form-input" placeholder="2.75rem" />
+      <template v-else-if="activeFormType === 'switch'">
+        <!-- 尺寸与形状 -->
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">尺寸与形状</h4>
+              <p class="settings-section-desc">设置开关的基础尺寸</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">高度</label>
-            <input v-model="config.form.switch.height" type="text" class="form-input" placeholder="1.5rem" />
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">宽度</label>
+              <input v-model="config.form.switch.width" type="text" class="form-input input-base" placeholder="2.75rem" />
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">高度</label>
+              <input v-model="config.form.switch.height" type="text" class="form-input input-base" placeholder="1.5rem" />
+            </div>
           </div>
         </div>
 
-        <h5 class="section-title">颜色</h5>
-        <div class="grid-2" style="gap: 1rem;">
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">关闭背景颜色</label>
+        <!-- 颜色设置 -->
+        <div class="settings-section-card">
+          <div class="settings-section-header">
+            <div>
+              <h4 class="settings-section-title">颜色设置</h4>
+              <p class="settings-section-desc">设置开关的颜色配置</p>
+            </div>
+          </div>
+          <div class="settings-section-content">
+            <div class="settings-field">
+              <label class="settings-field-label">关闭背景颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.switch.offBackgroundColor" type="color" class="color-preview" />
-                <input v-model="config.form.switch.offBackgroundColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.switch.offBackgroundColor" type="text" class="form-input color-text" placeholder="#d1d5db" />
               </div>
-          </div>
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">开启背景颜色</label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">开启背景颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.switch.onBackgroundColor" type="color" class="color-preview" />
-                <input v-model="config.form.switch.onBackgroundColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.switch.onBackgroundColor" type="text" class="form-input color-text" placeholder="#03624C" />
               </div>
-          </div>
-          <div class="form-group" style="gap: 0.5rem;">
-              <label class="form-label">滑块颜色</label>
+            </div>
+            <div class="settings-field">
+              <label class="settings-field-label">滑块颜色</label>
               <div class="form-color-row">
                 <input v-model="config.form.switch.thumbColor" type="color" class="color-preview" />
-                <input v-model="config.form.switch.thumbColor" type="text" class="form-input color-text" />
+                <input v-model="config.form.switch.thumbColor" type="text" class="form-input color-text" placeholder="#ffffff" />
               </div>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
 
-    <!-- 预览区域 -->
+    <!-- 右侧：实时预览 -->
     <div class="info-card">
       <h3 class="nav-title" style="margin-bottom: 1rem;">实时预览</h3>
-      
-      <div class="preview-section">
-        <!-- 下拉框预览 -->
-        <div v-if="activeFormType === 'select'">
-          <div class="preview-row">
-            <span class="preview-label">正常状态</span>
-            <select class="select-base">
-              <option>请选择选项</option>
+      <div class="settings-group">
+        <!-- 提示框 -->
+        <div class="info-card-tip">
+          <span class="i-carbon-information info-card-tip-icon"></span>
+          <p class="info-card-tip-text">
+            提示：左侧修改的样式会实时反映在下方的预览中。
+          </p>
+        </div>
+
+        <!-- 预览区域 -->
+        <div class="form-preview-container">
+          <!-- 下拉框预览 -->
+          <div v-if="activeFormType === 'select'" class="preview-item">
+            <label class="preview-label">选择选项</label>
+            <select class="preview-select" :style="{
+              height: config.form.select.height,
+              borderRadius: config.form.select.radius,
+              borderWidth: config.form.select.borderWidth,
+              backgroundColor: config.form.select.backgroundColor,
+              color: config.form.select.textColor,
+              borderColor: config.form.select.borderColor,
+            }">
               <option>选项 1</option>
               <option>选项 2</option>
               <option>选项 3</option>
             </select>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">聚焦状态</span>
-            <select class="select-base" style="
-              border-color: var(--select-focus-border-color);
-              box-shadow: 0 0 0 3px color-mix(in srgb, var(--select-focus-border-color), transparent 80%);
-            ">
-              <option>已选择的选项</option>
-            </select>
-          </div>
-          <div class="preview-row">
-            <span class="preview-label">禁用状态</span>
-            <select class="select-base" disabled>
-              <option>禁用的下拉框</option>
-            </select>
-          </div>
-        </div>
 
-        <!-- 复选框预览 -->
-        <div v-else-if="activeFormType === 'checkbox'">
-          <div class="preview-row">
-            <label class="checkbox-label">
-              <input type="checkbox" class="checkbox-base" />
-              <span>未选中状态</span>
+          <!-- 复选框预览 -->
+          <div v-if="activeFormType === 'checkbox'" class="preview-item">
+            <label class="preview-checkbox-label">
+              <input type="checkbox" class="preview-checkbox" checked :style="{
+                width: config.form.checkbox.size,
+                height: config.form.checkbox.size,
+                borderRadius: config.form.checkbox.radius,
+                borderWidth: config.form.checkbox.borderWidth,
+              }" />
+              <span>已选中的复选框</span>
+            </label>
+            <label class="preview-checkbox-label">
+              <input type="checkbox" class="preview-checkbox" :style="{
+                width: config.form.checkbox.size,
+                height: config.form.checkbox.size,
+                borderRadius: config.form.checkbox.radius,
+                borderWidth: config.form.checkbox.borderWidth,
+              }" />
+              <span>未选中的复选框</span>
             </label>
           </div>
-          <div class="preview-row">
-            <label class="checkbox-label">
-              <input type="checkbox" class="checkbox-base" checked />
-              <span>选中状态</span>
-            </label>
-          </div>
-          <div class="preview-row">
-            <label class="checkbox-label">
-              <input type="checkbox" class="checkbox-base" disabled />
-              <span>禁用状态</span>
-            </label>
-          </div>
-        </div>
 
-        <!-- 单选框预览 -->
-        <div v-else-if="activeFormType === 'radio'">
-          <div class="preview-row">
-            <label class="radio-label">
-              <input type="radio" name="preview-radio" class="radio-base" />
-              <span>选项 1</span>
+          <!-- 单选框预览 -->
+          <div v-if="activeFormType === 'radio'" class="preview-item">
+            <label class="preview-radio-label">
+              <input type="radio" name="preview-radio" class="preview-radio" checked :style="{
+                width: config.form.radio.size,
+                height: config.form.radio.size,
+                borderWidth: config.form.radio.borderWidth,
+              }" />
+              <span>已选中的单选框</span>
+            </label>
+            <label class="preview-radio-label">
+              <input type="radio" name="preview-radio" class="preview-radio" :style="{
+                width: config.form.radio.size,
+                height: config.form.radio.size,
+                borderWidth: config.form.radio.borderWidth,
+              }" />
+              <span>未选中的单选框</span>
             </label>
           </div>
-          <div class="preview-row">
-            <label class="radio-label">
-              <input type="radio" name="preview-radio" class="radio-base" checked />
-              <span>选项 2（选中）</span>
-            </label>
-          </div>
-          <div class="preview-row">
-            <label class="radio-label">
-              <input type="radio" name="preview-radio" class="radio-base" disabled />
-              <span>选项 3（禁用）</span>
-            </label>
-          </div>
-        </div>
 
-        <!-- 开关预览 -->
-        <div v-else-if="activeFormType === 'switch'">
-          <div class="preview-row">
-            <label class="switch-label">
-              <input type="checkbox" class="switch-base" />
-              <span class="switch-slider"></span>
-              <span class="switch-text">关闭状态</span>
+          <!-- 开关预览 -->
+          <div v-if="activeFormType === 'switch'" class="preview-item">
+            <label class="preview-switch-label">
+              <div class="preview-switch" :class="{ 'on': true }" :style="{
+                width: config.form.switch.width,
+                height: config.form.switch.height,
+                backgroundColor: config.form.switch.onBackgroundColor,
+              }">
+                <div class="preview-switch-thumb" :style="{
+                  backgroundColor: config.form.switch.thumbColor,
+                }"></div>
+              </div>
+              <span>开启状态</span>
             </label>
-          </div>
-          <div class="preview-row">
-            <label class="switch-label">
-              <input type="checkbox" class="switch-base" checked />
-              <span class="switch-slider"></span>
-              <span class="switch-text">开启状态</span>
-            </label>
-          </div>
-          <div class="preview-row">
-            <label class="switch-label">
-              <input type="checkbox" class="switch-base" disabled />
-              <span class="switch-slider"></span>
-              <span class="switch-text">禁用状态</span>
+            <label class="preview-switch-label">
+              <div class="preview-switch" :style="{
+                width: config.form.switch.width,
+                height: config.form.switch.height,
+                backgroundColor: config.form.switch.offBackgroundColor,
+              }">
+                <div class="preview-switch-thumb" :style="{
+                  backgroundColor: config.form.switch.thumbColor,
+                }"></div>
+              </div>
+              <span>关闭状态</span>
             </label>
           </div>
         </div>
@@ -460,61 +559,114 @@ const radiusOptions = [
   font-weight: 500;
 }
 
-/* 文本选项卡样式 */
-.text-tab-group {
-  display: flex;
-  gap: 2rem;
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 1.5rem;
+.form-preview-container {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
 }
 
-.text-tab-btn {
-  padding: 0.5rem 0;
-  border: none;
-  background: transparent;
+.preview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.preview-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.preview-select {
+  padding: 0 2.5rem 0 0.75rem;
+  border: 1px solid;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.preview-select:focus {
+  border-color: v-bind('config.form.select.focusBorderColor');
+  box-shadow: 0 0 0 3px v-bind('config.form.select.focusRingColor + "33"');
+}
+
+.preview-checkbox-label,
+.preview-radio-label,
+.preview-switch-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   cursor: pointer;
   font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  transition: all 0.2s;
-  white-space: nowrap;
-  position: relative;
-  font-weight: 400;
-}
-
-.text-tab-btn:hover {
   color: var(--color-text-primary);
 }
 
-.text-tab-btn.active {
-  color: var(--color-primary);
-  font-weight: 500;
-}
-
-.text-tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--color-primary);
-}
-
-.checkbox-label,
-.radio-label,
-.switch-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.preview-checkbox,
+.preview-radio {
+  appearance: none;
+  flex-shrink: 0;
+  border: 1px solid;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.switch-label {
+.preview-checkbox {
+  border-color: v-bind('config.form.checkbox.borderColor');
+}
+
+.preview-checkbox:checked {
+  background-color: v-bind('config.form.checkbox.checkedBackgroundColor');
+  border-color: v-bind('config.form.checkbox.checkedBorderColor');
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.preview-radio {
+  border-radius: 50%;
+  border-color: v-bind('config.form.radio.borderColor');
   position: relative;
 }
 
-.switch-text {
-  margin-left: 0.5rem;
+.preview-radio:checked {
+  border-color: v-bind('config.form.radio.checkedBorderColor');
+}
+
+.preview-radio:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: v-bind('config.form.radio.dotSize');
+  height: v-bind('config.form.radio.dotSize');
+  border-radius: 50%;
+  background-color: v-bind('config.form.radio.checkedDotColor');
+}
+
+.preview-switch {
+  position: relative;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.preview-switch-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(v-bind('config.form.switch.height') - 4px);
+  height: calc(v-bind('config.form.switch.height') - 4px);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  left: 2px;
+}
+
+.preview-switch.on .preview-switch-thumb {
+  left: calc(v-bind('config.form.switch.width') - v-bind('config.form.switch.height') + 2px);
 }
 </style>
-

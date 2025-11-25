@@ -28,17 +28,6 @@ export const themeConfig = reactive({
     borderWidth: '1px',
     dividerStyle: 'solid', // 'solid' | 'dashed' | 'dotted'
   },
-  // 卡片样式配置（变量化，影响整个系统）
-  card: {
-    padding: '1rem', // p-4
-    radius: '0.375rem', // rounded-md，继承自 style.radius
-    borderWidth: '1px', // 继承自 style.borderWidth
-    borderColor: '#211f20', // 继承自 colors.border
-    backgroundColor: '#ffffff', // bg-white
-    shadow: 'none', // 默认无阴影
-    shadowHover: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', // hover:shadow-md
-    transition: 'all 0.2s ease-in-out', // transition-all
-  },
   // 字体系统
   typography: {
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -220,52 +209,80 @@ export const themeConfig = reactive({
     // 下拉框
     select: {
       height: '2.5rem',
+      paddingX: '0.75rem',
       radius: '0.375rem',
       borderWidth: '1px',
       backgroundColor: '#ffffff',
       textColor: '#111827',
       borderColor: '#211f20',
-      focusBorderColor: 'var(--color-primary)',
+      focusBorderColor: '',  // 将在组件中初始化为当前主题色
+      focusRingColor: '',    // 将在组件中初始化为当前主题色
     },
     // 复选框
     checkbox: {
       size: '1.25rem',
       radius: '0.25rem',
       borderWidth: '1px',
+      backgroundColor: '#ffffff',
       borderColor: '#d1d5db',
-      checkedBackgroundColor: 'var(--color-primary)',
-      checkedBorderColor: 'var(--color-primary)',
+      checkedBackgroundColor: '',  // 将在组件中初始化为当前主题色
+      checkedBorderColor: '',      // 将在组件中初始化为当前主题色
       checkmarkColor: '#ffffff',
     },
     // 单选框
     radio: {
       size: '1.25rem',
       borderWidth: '2px',
+      backgroundColor: '#ffffff',
       borderColor: '#d1d5db',
-      checkedBorderColor: 'var(--color-primary)',
-      checkedDotColor: 'var(--color-primary)',
+      checkedBorderColor: '',  // 将在组件中初始化为当前主题色
+      checkedDotColor: '',     // 将在组件中初始化为当前主题色
+      dotSize: '0.5rem',
     },
     // 开关
     switch: {
       width: '2.75rem',
       height: '1.5rem',
       offBackgroundColor: '#d1d5db',
-      onBackgroundColor: 'var(--color-primary)',
+      onBackgroundColor: '',  // 将在组件中初始化为当前主题色
       thumbColor: '#ffffff',
     },
   },
   // 卡片
   card: {
+    // 通用设置
     radius: '0.5rem',
     padding: '1rem',
     borderWidth: '1px',
-    backgroundColor: '#ffffff',
-    borderColor: '#e5e7eb',
-    titleColor: '#111827',
-    contentColor: '#6b7280',
     shadow: '0 1px 3px rgba(0,0,0,0.1)',
     hoverShadow: '0 4px 16px rgba(0,0,0,0.1)',
-    hoverBorderColor: 'var(--color-primary)',
+
+    // 白底卡片
+    white: {
+      backgroundColor: '#ffffff',
+      borderColor: '#e5e7eb',
+      titleColor: '#111827',
+      contentColor: '#6b7280',
+      hoverBorderColor: 'var(--color-primary)',
+    },
+
+    // 主色底卡片
+    primary: {
+      backgroundColor: 'var(--color-primary)',
+      borderColor: 'var(--color-primary)',
+      titleColor: '#ffffff',
+      contentColor: '#ffffff',
+      hoverBorderColor: '#ffffff',
+    },
+
+    // 黑底卡片
+    dark: {
+      backgroundColor: '#1a1a1a',
+      borderColor: '#2d2d2d',
+      titleColor: '#ffffff',
+      contentColor: '#d1d5db',
+      hoverBorderColor: 'var(--color-primary)',
+    },
   },
   // 标签
   tag: {
@@ -304,11 +321,32 @@ export const themeConfig = reactive({
     radius: '0.5rem',
     padding: '1.5rem',
     backgroundColor: '#ffffff',
-    titleColor: '#111827',
-    contentColor: '#374151',
+    shadow: '0 8px 32px rgba(0,0,0,0.2)',
+
+    // 遮罩层
     overlayColor: '#000000',
     overlayOpacity: 0.5,
-    shadow: '0 8px 32px rgba(0,0,0,0.2)',
+    overlayBlur: '0px',
+
+    // 头部
+    headerBackgroundColor: '#ffffff',
+    headerBorderBottom: '1px solid #e5e7eb',
+    headerPadding: '1.5rem',
+
+    // 标题
+    titleColor: '#111827',
+    titleFontSize: '1.25rem',
+    titleFontWeight: '600',
+
+    // 内容区域
+    contentBackgroundColor: '#ffffff',
+    contentColor: '#374151',
+    contentPadding: '1.5rem',
+
+    // 底部
+    footerBackgroundColor: '#ffffff',
+    footerBorderTop: '1px solid #e5e7eb',
+    footerPadding: '1.5rem',
   },
   // 提示组件
   notification: {
@@ -328,9 +366,13 @@ export const themeConfig = reactive({
       padding: '1rem',
       borderWidth: '1px',
       infoBgColor: '#dbeafe',
+      infoBorderColor: '#3b82f6',
       successBgColor: '#d1fae5',
+      successBorderColor: '#10b981',
       warningBgColor: '#fef3c7',
+      warningBorderColor: '#f59e0b',
       errorBgColor: '#fee2e2',
+      errorBorderColor: '#ef4444',
     },
     // Message 消息
     message: {
@@ -343,18 +385,50 @@ export const themeConfig = reactive({
   },
   // 表格样式
   table: {
-    borderWidth: '1px',
-    borderColor: '#e5e7eb',
+    // 外围边框
+    outerBorder: true,
+    outerBorderWidth: '1px',
+    outerBorderColor: '#e5e7eb',
+    borderRadius: '0.5rem',
+    // 内部单元格边框
+    innerBorder: true,
+    innerBorderWidth: '1px',
+    innerBorderColor: '#e5e7eb',
+    // 表头样式
     headerBackgroundColor: '#f9fafb',
     headerTextColor: '#111827',
     headerFontWeight: '600',
+    headerFontSize: '0.875rem', // 14px
+    // 行样式
     rowHeight: '3rem', // 48px
     rowPaddingX: '1rem',
     rowPaddingY: '0.75rem',
-    cellBorderColor: '#e5e7eb',
+    rowTextColor: '#111827',
+    rowFontSize: '0.875rem', // 14px
+    hoverRowBackgroundColor: '#f3f4f6',
+    // 斑马纹
     zebraStripe: false,
     zebraStripeColor: '#f9fafb',
-    hoverRowBackgroundColor: '#f3f4f6',
+    // 操作菜单
+    actionMenu: {
+      triggerSize: '2rem',
+      triggerColor: '#6b7280',
+      triggerHoverColor: '#111827',
+      triggerHoverBg: '#f3f4f6',
+      triggerActiveColor: '#03624C',
+      menuBg: '#ffffff',
+      menuBorder: '#e5e7eb',
+      menuShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      menuRadius: '0.5rem',
+      menuPadding: '0.25rem',
+      itemPadding: '0.625rem 0.875rem',
+      itemColor: '#111827',
+      itemFontSize: '0.875rem',
+      itemFontWeight: '400',
+      itemHoverBg: '#f3f4f6',
+      itemDangerColor: '#ef4444',
+      itemDangerHoverBg: '#fef2f2',
+    },
   },
   // 布局设置
   layout: {

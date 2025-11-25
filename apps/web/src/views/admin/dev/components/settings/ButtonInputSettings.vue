@@ -806,92 +806,355 @@ const resizeOptions = [
     <!-- 预览区域 -->
     <div class="info-card">
       <h3 class="nav-title" style="margin-bottom: 1rem;">实时预览</h3>
-      
-      <div v-if="activeTab === 'buttons'" class="preview-section">
-        <!-- 主要按钮预览 -->
-        <div v-if="activeButtonType === 'primary'">
-          <div class="preview-row">
-            <span class="preview-label">正常状态</span>
-            <button class="btn-primary">主要按钮</button>
+      <div class="settings-group">
+        <!-- 提示框 -->
+        <div class="info-card-tip">
+          <span class="i-carbon-information info-card-tip-icon"></span>
+          <p class="info-card-tip-text">
+            提示：{{ activeTab === 'buttons' ? '鼠标悬停在按钮上可以查看悬停效果' : '点击输入框可以查看聚焦效果' }}
+          </p>
+        </div>
+
+        <!-- 按钮预览 -->
+        <div v-if="activeTab === 'buttons'" class="component-preview-container">
+          <!-- 主要按钮预览 -->
+          <div v-if="activeButtonType === 'primary'">
+            <div class="preview-item">
+              <label class="preview-label">三种状态对比</label>
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                  <button class="btn-primary">正常状态</button>
+                  <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; color: var(--color-text-secondary);">正常</p>
+                </div>
+                <div style="text-align: center;">
+                  <button class="btn-primary" style="
+                    background-color: var(--btn-primary-hover-bg-color);
+                    color: var(--btn-primary-hover-text-color);
+                    border-color: var(--btn-primary-hover-border-color);
+                  ">悬停状态</button>
+                  <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; color: var(--color-text-secondary);">悬停</p>
+                </div>
+                <div style="text-align: center;">
+                  <button class="btn-primary" disabled>禁用状态</button>
+                  <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; color: var(--color-text-secondary);">禁用</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-item">
+              <label class="preview-label">带图标按钮</label>
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn-primary">
+                  <span class="i-carbon-add"></span>
+                  新建
+                </button>
+                <button class="btn-primary">
+                  <span class="i-carbon-save"></span>
+                  保存
+                </button>
+                <button class="btn-primary">
+                  <span class="i-carbon-upload"></span>
+                  上传
+                </button>
+                <button class="btn-primary">
+                  <span class="i-carbon-download"></span>
+                  下载
+                </button>
+              </div>
+            </div>
+
+            <div class="preview-item">
+              <label class="preview-label">不同尺寸</label>
+              <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <button class="btn-primary" style="padding: 0.375rem 0.75rem; font-size: 0.875rem;">小按钮</button>
+                <button class="btn-primary">标准按钮</button>
+                <button class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 1rem;">大按钮</button>
+              </div>
+            </div>
+
+            <div class="preview-item">
+              <label class="preview-label">应用场景</label>
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                  <button class="btn-outline">取消</button>
+                  <button class="btn-primary">确定</button>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn-primary">
+                    <span class="i-carbon-add"></span>
+                    新建项目
+                  </button>
+                  <button class="btn-primary">
+                    <span class="i-carbon-edit"></span>
+                    编辑
+                  </button>
+                  <button class="btn-primary">
+                    <span class="i-carbon-trash-can"></span>
+                    删除
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-item">
+              <label class="preview-label">当前配置</label>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary);">
+                <div>
+                  <strong style="color: var(--color-text-primary);">圆角：</strong>
+                  {{ config.button.primary.radius }}
+                </div>
+                <div>
+                  <strong style="color: var(--color-text-primary);">水平内边距：</strong>
+                  {{ config.button.primary.paddingX }}
+                </div>
+                <div>
+                  <strong style="color: var(--color-text-primary);">垂直内边距：</strong>
+                  {{ config.button.primary.paddingY }}
+                </div>
+                <div>
+                  <strong style="color: var(--color-text-primary);">字号：</strong>
+                  {{ config.button.primary.fontSize }}
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">悬停状态</span>
-            <button class="btn-primary" style="
-              background-color: var(--btn-primary-hover-bg-color);
-              color: var(--btn-primary-hover-text-color);
-              border-color: var(--btn-primary-hover-border-color);
-            ">主要按钮</button>
-          </div>
-          <div class="preview-row">
-            <span class="preview-label">禁用状态</span>
-            <button class="btn-primary" disabled>主要按钮</button>
+
+          <!-- 次要按钮预览 -->
+          <div v-else-if="activeButtonType === 'outline'">
+            <div class="preview-item">
+              <label class="preview-label">三种状态对比</label>
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                  <button class="btn-outline">正常状态</button>
+                  <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; color: var(--color-text-secondary);">正常</p>
+                </div>
+                <div style="text-align: center;">
+                  <button class="btn-outline" style="
+                    background-color: var(--btn-outline-hover-bg-color);
+                    color: var(--btn-outline-hover-text-color);
+                    border-color: var(--btn-outline-hover-border-color);
+                  ">悬停状态</button>
+                  <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; color: var(--color-text-secondary);">悬停</p>
+                </div>
+                <div style="text-align: center;">
+                  <button class="btn-outline" disabled>禁用状态</button>
+                  <p style="font-size: 0.75rem; margin: 0.5rem 0 0 0; color: var(--color-text-secondary);">禁用</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-item">
+              <label class="preview-label">带图标按钮</label>
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn-outline">
+                  <span class="i-carbon-close"></span>
+                  取消
+                </button>
+                <button class="btn-outline">
+                  <span class="i-carbon-reset"></span>
+                  重置
+                </button>
+                <button class="btn-outline">
+                  <span class="i-carbon-view"></span>
+                  查看
+                </button>
+                <button class="btn-outline">
+                  <span class="i-carbon-settings"></span>
+                  设置
+                </button>
+              </div>
+            </div>
+
+            <div class="preview-item">
+              <label class="preview-label">与主要按钮组合</label>
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                  <button class="btn-outline">取消</button>
+                  <button class="btn-primary">确定</button>
+                </div>
+                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                  <button class="btn-outline">上一步</button>
+                  <button class="btn-outline">跳过</button>
+                  <button class="btn-primary">下一步</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-item">
+              <label class="preview-label">当前配置</label>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary);">
+                <div>
+                  <strong style="color: var(--color-text-primary);">圆角：</strong>
+                  {{ config.button.outline.radius }}
+                </div>
+                <div>
+                  <strong style="color: var(--color-text-primary);">水平内边距：</strong>
+                  {{ config.button.outline.paddingX }}
+                </div>
+                <div>
+                  <strong style="color: var(--color-text-primary);">垂直内边距：</strong>
+                  {{ config.button.outline.paddingY }}
+                </div>
+                <div>
+                  <strong style="color: var(--color-text-primary);">字号：</strong>
+                  {{ config.button.outline.fontSize }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- 次要按钮预览 -->
-        <div v-else-if="activeButtonType === 'outline'">
-          <div class="preview-row">
-            <span class="preview-label">正常状态</span>
-            <button class="btn-outline">次要按钮</button>
-          </div>
-          <div class="preview-row">
-            <span class="preview-label">悬停状态</span>
-            <button class="btn-outline" style="
-              background-color: var(--btn-outline-hover-bg-color);
-              color: var(--btn-outline-hover-text-color);
-              border-color: var(--btn-outline-hover-border-color);
-            ">次要按钮</button>
-          </div>
-          <div class="preview-row">
-            <span class="preview-label">禁用状态</span>
-            <button class="btn-outline" disabled>次要按钮</button>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="activeTab === 'inputs'" class="preview-section">
+      <!-- 输入框预览 -->
+        <div v-if="activeTab === 'inputs'" class="component-preview-container">
         <!-- 单行文本预览 -->
         <div v-if="activeInputType === 'text'">
-          <div class="preview-row">
-            <span class="preview-label">正常状态</span>
-            <input type="text" class="input-base" placeholder="请输入内容..." />
+          <div class="preview-item">
+            <label class="preview-label">三种状态对比</label>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div>
+                <input type="text" class="input-base" placeholder="正常状态：请输入内容..." />
+                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--color-text-secondary);">正常状态</p>
+              </div>
+              <div>
+                <input type="text" class="input-base" placeholder="聚焦状态：点击查看效果..." style="
+                  border-color: var(--input-focus-border-color);
+                  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus-ring-color), transparent 80%);
+                " />
+                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--color-text-secondary);">聚焦状态（带光圈）</p>
+              </div>
+              <div>
+                <input type="text" class="input-base" placeholder="禁用状态" disabled />
+                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--color-text-secondary);">禁用状态</p>
+              </div>
+            </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">聚焦状态</span>
-            <input type="text" class="input-base" placeholder="请输入内容..." style="
-              border-color: var(--input-focus-border-color);
-              box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus-ring-color), transparent 80%);
-            " />
+
+          <div class="preview-item">
+            <label class="preview-label">不同类型输入框</label>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <input type="text" class="input-base" placeholder="文本输入框" />
+              <input type="email" class="input-base" placeholder="邮箱输入框" />
+              <input type="password" class="input-base" placeholder="密码输入框" />
+              <input type="number" class="input-base" placeholder="数字输入框" />
+              <input type="url" class="input-base" placeholder="网址输入框" />
+            </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">禁用状态</span>
-            <input type="text" class="input-base" placeholder="请输入内容..." disabled />
+
+          <div class="preview-item">
+            <label class="preview-label">表单应用场景</label>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">用户名</label>
+                <input type="text" class="input-base" placeholder="请输入用户名" />
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">邮箱地址</label>
+                <input type="email" class="input-base" placeholder="example@email.com" />
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-outline">取消</button>
+                <button class="btn-primary">提交</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="preview-item">
+            <label class="preview-label">当前配置</label>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary);">
+              <div>
+                <strong style="color: var(--color-text-primary);">圆角：</strong>
+                {{ config.input.text.radius }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">水平内边距：</strong>
+                {{ config.input.text.paddingX }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">垂直内边距：</strong>
+                {{ config.input.text.paddingY }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">字号：</strong>
+                {{ config.input.text.fontSize }}
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- 多行文本预览 -->
         <div v-else-if="activeInputType === 'textarea'">
-          <div class="preview-row">
-            <span class="preview-label">正常状态</span>
-            <textarea class="textarea-base" placeholder="请输入多行内容..." rows="3"></textarea>
+          <div class="preview-item">
+            <label class="preview-label">三种状态对比</label>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div>
+                <textarea class="textarea-base" placeholder="正常状态：请输入多行内容..." rows="3"></textarea>
+                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--color-text-secondary);">正常状态</p>
+              </div>
+              <div>
+                <textarea class="textarea-base" placeholder="聚焦状态：点击查看效果..." rows="3" style="
+                  border-color: var(--textarea-focus-border-color);
+                  box-shadow: 0 0 0 3px color-mix(in srgb, var(--textarea-focus-ring-color), transparent 80%);
+                "></textarea>
+                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--color-text-secondary);">聚焦状态（带光圈）</p>
+              </div>
+              <div>
+                <textarea class="textarea-base" placeholder="禁用状态" rows="3" disabled></textarea>
+                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--color-text-secondary);">禁用状态</p>
+              </div>
+            </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">聚焦状态</span>
-            <textarea class="textarea-base" placeholder="请输入多行内容..." rows="3" style="
-              border-color: var(--textarea-focus-border-color);
-              box-shadow: 0 0 0 3px color-mix(in srgb, var(--textarea-focus-ring-color), transparent 80%);
-            "></textarea>
+
+          <div class="preview-item">
+            <label class="preview-label">不同高度</label>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <textarea class="textarea-base" placeholder="2行高度" rows="2"></textarea>
+              <textarea class="textarea-base" placeholder="4行高度" rows="4"></textarea>
+              <textarea class="textarea-base" placeholder="6行高度" rows="6"></textarea>
+            </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">禁用状态</span>
-            <textarea class="textarea-base" placeholder="请输入多行内容..." rows="3" disabled></textarea>
+
+          <div class="preview-item">
+            <label class="preview-label">表单应用场景</label>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">项目描述</label>
+                <textarea class="textarea-base" placeholder="请输入项目描述..." rows="4"></textarea>
+                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--color-text-secondary);">最多 500 字</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                <button class="btn-outline">取消</button>
+                <button class="btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="preview-item">
+            <label class="preview-label">当前配置</label>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary);">
+              <div>
+                <strong style="color: var(--color-text-primary);">圆角：</strong>
+                {{ config.input.textarea.radius }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">水平内边距：</strong>
+                {{ config.input.textarea.paddingX }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">垂直内边距：</strong>
+                {{ config.input.textarea.paddingY }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">字号：</strong>
+                {{ config.input.textarea.fontSize }}
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- 富文本编辑器预览 -->
         <div v-else-if="activeInputType === 'richtext'">
-          <div class="preview-row">
-            <span class="preview-label">正常状态</span>
+          <div class="preview-item">
+            <label class="preview-label">正常状态</label>
             <RichTextEditor
               v-model="richTextContent"
               placeholder="尝试使用工具栏编辑内容..."
@@ -900,8 +1163,9 @@ const resizeOptions = [
               :upload-image="mockUploadImage"
             />
           </div>
-          <div class="preview-row">
-            <span class="preview-label">禁用状态</span>
+          
+          <div class="preview-item">
+            <label class="preview-label">禁用状态</label>
             <RichTextEditor
               model-value="<p>这是禁用状态的富文本编辑器</p>"
               :disabled="true"
@@ -909,7 +1173,47 @@ const resizeOptions = [
               :max-height="config.input.richtext.maxHeight"
             />
           </div>
+
+          <div class="preview-item">
+            <label class="preview-label">功能展示</label>
+            <div style="padding: 1rem; background: var(--color-bg-secondary); border-radius: 0.5rem;">
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 0.875rem; font-weight: 600;">支持的功能</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem; color: var(--color-text-secondary); line-height: 1.6;">
+                <li>文本格式：粗体、斜体、下划线、删除线</li>
+                <li>标题层级：H1、H2、H3、正文</li>
+                <li>文本对齐：左对齐、居中、右对齐、两端对齐</li>
+                <li>列表：有序列表、无序列表</li>
+                <li>缩进：增加缩进、减少缩进</li>
+                <li>颜色：文字颜色、背景高亮</li>
+                <li>插入：链接、图片、分隔线</li>
+                <li>其他：清除格式、撤销、重做</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="preview-item">
+            <label class="preview-label">当前配置</label>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary);">
+              <div>
+                <strong style="color: var(--color-text-primary);">最小高度：</strong>
+                {{ config.input.richtext.minHeight }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">最大高度：</strong>
+                {{ config.input.richtext.maxHeight }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">圆角：</strong>
+                {{ config.input.richtext.radius }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">边框宽度：</strong>
+                {{ config.input.richtext.borderWidth }}
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -978,5 +1282,6 @@ const resizeOptions = [
   height: 2px;
   background-color: var(--color-primary);
 }
+
 </style>
 

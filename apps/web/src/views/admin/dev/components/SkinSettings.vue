@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { applyTheme } from '@/utils/theme'
+import { initializeColorsFromPrimary } from '@/utils/colorInit'
 
 const props = defineProps<{
   config: any
@@ -303,34 +304,13 @@ const applyScheme = (scheme: (typeof colorSchemes)[number]) => {
   props.config.colors.bgTertiary = scheme.colors.bgTertiary
   props.config.colors.border = scheme.colors.border
   props.config.colors.dark = scheme.colors.dark
+  
+  // 保存当前选择的配色方案 ID，用于"恢复默认"功能
+  props.config._currentSchemeId = scheme.id
 
-  // 重置按钮和输入框颜色为默认值 (使用变量引用，确保跟随主色)
-  // 这里显式重置，确保用户切换方案时，之前的自定义颜色被覆盖回"跟随模式"
-  if (props.config.button?.primary) {
-    props.config.button.primary.borderColor = 'var(--color-primary)'
-    props.config.button.primary.backgroundColor = 'var(--color-primary)'
-    props.config.button.primary.hoverBackgroundColor = 'color-mix(in srgb, var(--color-primary), black 10%)'
-    props.config.button.primary.hoverTextColor = '#ffffff'
-    props.config.button.primary.hoverBorderColor = 'var(--color-primary)'
-    props.config.button.primary.disabledBorderColor = 'transparent'
-  }
-  if (props.config.button?.outline) {
-    props.config.button.outline.hoverBorderColor = 'var(--color-primary)'
-    props.config.button.outline.hoverTextColor = 'var(--color-primary)'
-  }
-  // 重置输入框颜色
-  if (props.config.input?.text) {
-    props.config.input.text.focusBorderColor = 'var(--color-primary)'
-    props.config.input.text.focusRingColor = 'var(--color-primary)'
-  }
-  if (props.config.input?.textarea) {
-    props.config.input.textarea.focusBorderColor = 'var(--color-primary)'
-    props.config.input.textarea.focusRingColor = 'var(--color-primary)'
-  }
-  if (props.config.input?.richtext) {
-    props.config.input.richtext.focusBorderColor = 'var(--color-primary)'
-    props.config.input.richtext.focusRingColor = 'var(--color-primary)'
-  }
+  // 使用统一的颜色初始化函数
+  // 这样可以确保所有组件的颜色都跟随新选择的配色方案
+  initializeColorsFromPrimary(props.config, scheme.colors.primary)
 
   // Apply immediately for better UX, though parent watcher also handles it
   applyTheme(props.config)
@@ -338,17 +318,30 @@ const applyScheme = (scheme: (typeof colorSchemes)[number]) => {
 
 // Initialize selected scheme based on current config
 onMounted(() => {
-  if (props.config?.colors?.primary) {
+  // 优先使用保存的配色方案 ID
+  if (props.config?._currentSchemeId) {
+    selectedScheme.value = props.config._currentSchemeId
+  } else if (props.config?.colors?.primary) {
+    // 如果没有保存的 ID，则根据主色推断
     const scheme = colorSchemes.find(s => s.colors.primary === props.config.colors.primary)
     if (scheme) {
       selectedScheme.value = scheme.id
+      // 同时保存这个 ID
+      props.config._currentSchemeId = scheme.id
     }
   }
 })
 
 // Watch for external config changes (e.g. reset) to update selected scheme
+watch(() => props.config?._currentSchemeId, (newSchemeId) => {
+  if (newSchemeId) {
+    selectedScheme.value = newSchemeId
+  }
+})
+
+// 也监听主色变化（用于手动修改颜色的情况）
 watch(() => props.config?.colors?.primary, (newPrimary) => {
-  if (newPrimary) {
+  if (newPrimary && !props.config?._currentSchemeId) {
     const scheme = colorSchemes.find(s => s.colors.primary === newPrimary)
     if (scheme) {
       selectedScheme.value = scheme.id

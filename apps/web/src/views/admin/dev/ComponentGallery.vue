@@ -3,6 +3,7 @@ import { ref, onMounted, watch, computed, nextTick } from 'vue'
 import { themeConfig } from '@/config/theme'
 import { getRemoteThemeConfig, saveRemoteThemeConfig } from '@/api/config'
 import { applyTheme } from '@/utils/theme'
+import { initializeColorsFromPrimary } from '@/utils/colorInit'
 
 // Import sub-components
 import SkinSettings from './components/SkinSettings.vue'
@@ -96,10 +97,20 @@ onMounted(async () => {
   try {
     const remote = await getRemoteThemeConfig()
     config.value = mergeWithDefaults(remote || {})
+    
+    // 初始化所有颜色相关的配置
+    const primaryColor = config.value.colors?.primary || '#03624C'
+    initializeColorsFromPrimary(config.value, primaryColor)
+    
     applyTheme(config.value)
   } catch (error) {
     console.error('加载配置失败:', error)
     config.value = JSON.parse(JSON.stringify(themeConfig))
+    
+    // 初始化所有颜色相关的配置
+    const primaryColor = config.value.colors?.primary || '#03624C'
+    initializeColorsFromPrimary(config.value, primaryColor)
+    
     applyTheme(themeConfig)
   }
 })
@@ -134,11 +145,19 @@ const saveConfig = async () => {
       // Create a fresh copy of default config
       const freshConfig = JSON.parse(JSON.stringify(themeConfig))
       
-      // 获取当前主色，用于重新初始化
-      const primaryColor = freshConfig.colors?.primary || '#03624C'
+      // 保留当前选择的配色方案（如果有的话）
+      const currentSchemeId = config.value._currentSchemeId || 'green'
+      const currentPrimaryColor = config.value.colors?.primary || '#03624C'
       
-      // 深度复制属性
+      // 获取当前主色，用于重新初始化（使用当前配色的主色，而不是默认的孟加拉绿）
+      const primaryColor = currentPrimaryColor
+      
+      // 深度复制属性，但保留当前的颜色配置
       Object.keys(freshConfig).forEach(key => {
+        // 跳过 colors，因为我们要保留当前选择的配色方案
+        if (key === 'colors') {
+          return
+        }
         if (typeof freshConfig[key] === 'object' && freshConfig[key] !== null && !Array.isArray(freshConfig[key])) {
           if (!config.value[key]) {
             config.value[key] = {}
@@ -158,63 +177,13 @@ const saveConfig = async () => {
         }
       })
       
+      // 恢复配色方案 ID
+      config.value._currentSchemeId = currentSchemeId
+      
       await nextTick()
       
-      // 手动初始化所有使用主色的组件颜色
-      if (primaryColor && primaryColor.startsWith('#')) {
-        // 计算悬停颜色
-        const r = parseInt(primaryColor.slice(1, 3), 16)
-        const g = parseInt(primaryColor.slice(3, 5), 16)
-        const b = parseInt(primaryColor.slice(5, 7), 16)
-        const hoverColor = `#${Math.floor(r * 0.9).toString(16).padStart(2, '0')}${Math.floor(g * 0.9).toString(16).padStart(2, '0')}${Math.floor(b * 0.9).toString(16).padStart(2, '0')}`
-        
-        // 强制初始化按钮颜色
-        if (config.value.button?.primary) {
-          config.value.button.primary.backgroundColor = primaryColor
-          config.value.button.primary.borderColor = primaryColor
-          config.value.button.primary.hoverBackgroundColor = hoverColor
-          config.value.button.primary.hoverBorderColor = primaryColor
-        }
-        if (config.value.button?.outline) {
-          config.value.button.outline.hoverBorderColor = primaryColor
-          config.value.button.outline.hoverTextColor = primaryColor
-        }
-        
-        // 强制初始化输入框颜色
-        if (config.value.input?.text) {
-          config.value.input.text.focusBorderColor = primaryColor
-          config.value.input.text.focusRingColor = primaryColor
-        }
-        if (config.value.input?.textarea) {
-          config.value.input.textarea.focusBorderColor = primaryColor
-          config.value.input.textarea.focusRingColor = primaryColor
-        }
-        if (config.value.input?.richtext) {
-          config.value.input.richtext.focusBorderColor = primaryColor
-          config.value.input.richtext.focusRingColor = primaryColor
-        }
-        
-        // 强制初始化表单元素颜色
-        if (config.value.form?.select) {
-          config.value.form.select.focusBorderColor = primaryColor
-        }
-        if (config.value.form?.checkbox) {
-          config.value.form.checkbox.checkedBackgroundColor = primaryColor
-          config.value.form.checkbox.checkedBorderColor = primaryColor
-        }
-        if (config.value.form?.radio) {
-          config.value.form.radio.checkedBorderColor = primaryColor
-          config.value.form.radio.checkedDotColor = primaryColor
-        }
-        if (config.value.form?.switch) {
-          config.value.form.switch.onBackgroundColor = primaryColor
-        }
-        
-        // 强制初始化卡片颜色
-        if (config.value.card) {
-          config.value.card.hoverBorderColor = primaryColor
-        }
-      }
+      // 使用统一的颜色初始化函数
+      initializeColorsFromPrimary(config.value, primaryColor)
       
       applyTheme(config.value)
     }

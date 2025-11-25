@@ -19,14 +19,48 @@ export function applyTheme(theme: typeof themeConfig) {
 
   // 应用卡片样式变量
   if (theme.card) {
+    // 通用设置
     root.style.setProperty('--card-padding', theme.card.padding)
     root.style.setProperty('--card-radius', theme.card.radius)
     root.style.setProperty('--card-border-width', theme.card.borderWidth)
-    root.style.setProperty('--card-border-color', theme.card.borderColor)
-    root.style.setProperty('--card-bg-color', theme.card.backgroundColor)
     root.style.setProperty('--card-shadow', theme.card.shadow)
-    root.style.setProperty('--card-shadow-hover', theme.card.shadowHover)
-    root.style.setProperty('--card-transition', theme.card.transition)
+    root.style.setProperty('--card-hover-shadow', theme.card.hoverShadow)
+
+    // 白底卡片
+    if (theme.card.white) {
+      root.style.setProperty('--card-white-bg-color', theme.card.white.backgroundColor)
+      root.style.setProperty('--card-white-border-color', theme.card.white.borderColor)
+      root.style.setProperty('--card-white-title-color', theme.card.white.titleColor)
+      root.style.setProperty('--card-white-content-color', theme.card.white.contentColor)
+      root.style.setProperty('--card-white-hover-border-color', resolveColor(theme.card.white.hoverBorderColor, '--color-primary'))
+    }
+
+    // 主色底卡片
+    if (theme.card.primary) {
+      root.style.setProperty('--card-primary-bg-color', resolveColor(theme.card.primary.backgroundColor, '--color-primary'))
+      root.style.setProperty('--card-primary-border-color', resolveColor(theme.card.primary.borderColor, '--color-primary'))
+      root.style.setProperty('--card-primary-title-color', theme.card.primary.titleColor)
+      root.style.setProperty('--card-primary-content-color', theme.card.primary.contentColor)
+      root.style.setProperty('--card-primary-hover-border-color', theme.card.primary.hoverBorderColor)
+    }
+
+    // 黑底卡片
+    if (theme.card.dark) {
+      root.style.setProperty('--card-dark-bg-color', theme.card.dark.backgroundColor)
+      root.style.setProperty('--card-dark-border-color', theme.card.dark.borderColor)
+      root.style.setProperty('--card-dark-title-color', theme.card.dark.titleColor)
+      root.style.setProperty('--card-dark-content-color', theme.card.dark.contentColor)
+      root.style.setProperty('--card-dark-hover-border-color', resolveColor(theme.card.dark.hoverBorderColor, '--color-primary'))
+    }
+
+    // 保持向后兼容（默认使用白底卡片）
+    if (theme.card.white) {
+      root.style.setProperty('--card-bg-color', theme.card.white.backgroundColor)
+      root.style.setProperty('--card-border-color', theme.card.white.borderColor)
+      root.style.setProperty('--card-title-color', theme.card.white.titleColor)
+      root.style.setProperty('--card-content-color', theme.card.white.contentColor)
+      root.style.setProperty('--card-hover-border-color', resolveColor(theme.card.white.hoverBorderColor, '--color-primary'))
+    }
   }
 
   // 应用颜色变量
@@ -273,20 +307,192 @@ export function applyTheme(theme: typeof themeConfig) {
     }
   }
 
-  // 应用表格样式变量
-  if (theme.table) {
-    root.style.setProperty('--table-border-width', theme.table.borderWidth)
-    root.style.setProperty('--table-border-color', theme.table.borderColor)
-    root.style.setProperty('--table-header-bg-color', theme.table.headerBackgroundColor)
-    root.style.setProperty('--table-header-text-color', theme.table.headerTextColor)
-    root.style.setProperty('--table-header-font-weight', theme.table.headerFontWeight.toString())
-    root.style.setProperty('--table-row-height', theme.table.rowHeight)
-    root.style.setProperty('--table-row-padding-x', theme.table.rowPaddingX)
-    root.style.setProperty('--table-row-padding-y', theme.table.rowPaddingY)
-    root.style.setProperty('--table-cell-border-color', theme.table.cellBorderColor)
-    root.style.setProperty('--table-zebra-stripe', theme.table.zebraStripe ? 'true' : 'false')
-    root.style.setProperty('--table-zebra-stripe-color', theme.table.zebraStripeColor)
-    root.style.setProperty('--table-hover-row-bg-color', theme.table.hoverRowBackgroundColor)
+  // 应用表单元素变量
+  if (theme.form) {
+    // 下拉框
+    if (theme.form.select) {
+      const select = theme.form.select
+      root.style.setProperty('--select-height', select.height)
+      root.style.setProperty('--select-padding-x', select.paddingX || '0.75rem')
+      root.style.setProperty('--select-radius', select.radius)
+      root.style.setProperty('--select-border-width', select.borderWidth)
+      root.style.setProperty('--select-border-color', select.borderColor)
+      root.style.setProperty('--select-bg-color', select.backgroundColor)
+      root.style.setProperty('--select-text-color', select.textColor)
+      root.style.setProperty('--select-focus-border-color', resolveColor(select.focusBorderColor, '--color-primary'))
+      root.style.setProperty('--select-focus-ring-color', resolveColor(select.focusRingColor, '--color-primary'))
+    }
+
+    // 复选框
+    if (theme.form.checkbox) {
+      const checkbox = theme.form.checkbox
+      root.style.setProperty('--checkbox-size', checkbox.size)
+      root.style.setProperty('--checkbox-radius', checkbox.radius)
+      root.style.setProperty('--checkbox-border-width', checkbox.borderWidth)
+      root.style.setProperty('--checkbox-border-color', checkbox.borderColor)
+      root.style.setProperty('--checkbox-bg-color', checkbox.backgroundColor || '#ffffff')
+      root.style.setProperty('--checkbox-checked-bg-color', resolveColor(checkbox.checkedBackgroundColor, '--color-primary'))
+      root.style.setProperty('--checkbox-checked-border-color', resolveColor(checkbox.checkedBorderColor, '--color-primary'))
+      root.style.setProperty('--checkbox-checkmark-color', checkbox.checkmarkColor)
+    }
+
+    // 单选框
+    if (theme.form.radio) {
+      const radio = theme.form.radio
+      root.style.setProperty('--radio-size', radio.size)
+      root.style.setProperty('--radio-border-width', radio.borderWidth)
+      root.style.setProperty('--radio-border-color', radio.borderColor)
+      root.style.setProperty('--radio-bg-color', radio.backgroundColor || '#ffffff')
+      root.style.setProperty('--radio-checked-border-color', resolveColor(radio.checkedBorderColor, '--color-primary'))
+      root.style.setProperty('--radio-checked-dot-color', resolveColor(radio.checkedDotColor, '--color-primary'))
+      root.style.setProperty('--radio-dot-size', radio.dotSize)
+    }
+
+    // 开关
+    if (theme.form.switch) {
+      const switchConfig = theme.form.switch
+      root.style.setProperty('--switch-width', switchConfig.width)
+      root.style.setProperty('--switch-height', switchConfig.height)
+      root.style.setProperty('--switch-off-bg-color', switchConfig.offBackgroundColor)
+      root.style.setProperty('--switch-on-bg-color', resolveColor(switchConfig.onBackgroundColor, '--color-primary'))
+      root.style.setProperty('--switch-thumb-color', switchConfig.thumbColor)
+    }
+  }
+
+  // 应用标签变量
+  if (theme.tag) {
+    // 默认标签
+    if (theme.tag.default) {
+      const tag = theme.tag.default
+      const fontSize = tag.size === 'small' ? '0.75rem' : tag.size === 'large' ? '1rem' : '0.875rem'
+      const padding = tag.size === 'small' ? '0.125rem 0.5rem' : tag.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem'
+      root.style.setProperty('--tag-default-font-size', fontSize)
+      root.style.setProperty('--tag-default-padding', padding)
+      root.style.setProperty('--tag-default-radius', tag.radius)
+      root.style.setProperty('--tag-default-bg-color', tag.backgroundColor)
+      root.style.setProperty('--tag-default-text-color', tag.textColor)
+      root.style.setProperty('--tag-default-border-color', tag.borderColor)
+    }
+
+    // 成功标签
+    if (theme.tag.success) {
+      const tag = theme.tag.success
+      const fontSize = tag.size === 'small' ? '0.75rem' : tag.size === 'large' ? '1rem' : '0.875rem'
+      const padding = tag.size === 'small' ? '0.125rem 0.5rem' : tag.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem'
+      root.style.setProperty('--tag-success-font-size', fontSize)
+      root.style.setProperty('--tag-success-padding', padding)
+      root.style.setProperty('--tag-success-radius', tag.radius)
+      root.style.setProperty('--tag-success-bg-color', tag.backgroundColor)
+      root.style.setProperty('--tag-success-text-color', tag.textColor)
+      root.style.setProperty('--tag-success-border-color', tag.borderColor)
+    }
+
+    // 警告标签
+    if (theme.tag.warning) {
+      const tag = theme.tag.warning
+      const fontSize = tag.size === 'small' ? '0.75rem' : tag.size === 'large' ? '1rem' : '0.875rem'
+      const padding = tag.size === 'small' ? '0.125rem 0.5rem' : tag.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem'
+      root.style.setProperty('--tag-warning-font-size', fontSize)
+      root.style.setProperty('--tag-warning-padding', padding)
+      root.style.setProperty('--tag-warning-radius', tag.radius)
+      root.style.setProperty('--tag-warning-bg-color', tag.backgroundColor)
+      root.style.setProperty('--tag-warning-text-color', tag.textColor)
+      root.style.setProperty('--tag-warning-border-color', tag.borderColor)
+    }
+
+    // 危险标签
+    if (theme.tag.danger) {
+      const tag = theme.tag.danger
+      const fontSize = tag.size === 'small' ? '0.75rem' : tag.size === 'large' ? '1rem' : '0.875rem'
+      const padding = tag.size === 'small' ? '0.125rem 0.5rem' : tag.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem'
+      root.style.setProperty('--tag-danger-font-size', fontSize)
+      root.style.setProperty('--tag-danger-padding', padding)
+      root.style.setProperty('--tag-danger-radius', tag.radius)
+      root.style.setProperty('--tag-danger-bg-color', tag.backgroundColor)
+      root.style.setProperty('--tag-danger-text-color', tag.textColor)
+      root.style.setProperty('--tag-danger-border-color', tag.borderColor)
+    }
+  }
+
+  // 应用模态窗变量
+  if (theme.modal) {
+    const modal = theme.modal
+    // 尺寸
+    const width = modal.size === 'small' ? '400px' : modal.size === 'large' ? '800px' : modal.size === 'xlarge' ? '1000px' : '600px'
+    root.style.setProperty('--modal-width', width)
+    root.style.setProperty('--modal-radius', modal.radius)
+    root.style.setProperty('--modal-padding', modal.padding)
+
+    // 背景和阴影
+    root.style.setProperty('--modal-bg-color', modal.backgroundColor)
+    root.style.setProperty('--modal-shadow', modal.shadow)
+
+    // 遮罩层
+    root.style.setProperty('--modal-overlay-color', modal.overlayColor)
+    root.style.setProperty('--modal-overlay-opacity', modal.overlayOpacity.toString())
+    root.style.setProperty('--modal-overlay-blur', modal.overlayBlur || '0px')
+
+    // 头部
+    root.style.setProperty('--modal-header-bg-color', modal.headerBackgroundColor)
+    root.style.setProperty('--modal-header-border-bottom', modal.headerBorderBottom)
+    root.style.setProperty('--modal-header-padding', modal.headerPadding)
+
+    // 标题
+    root.style.setProperty('--modal-title-color', modal.titleColor)
+    root.style.setProperty('--modal-title-font-size', modal.titleFontSize)
+    root.style.setProperty('--modal-title-font-weight', modal.titleFontWeight)
+
+    // 内容区域
+    root.style.setProperty('--modal-content-bg-color', modal.contentBackgroundColor)
+    root.style.setProperty('--modal-content-color', modal.contentColor)
+    root.style.setProperty('--modal-content-padding', modal.contentPadding)
+
+    // 底部
+    root.style.setProperty('--modal-footer-bg-color', modal.footerBackgroundColor)
+    root.style.setProperty('--modal-footer-border-top', modal.footerBorderTop)
+    root.style.setProperty('--modal-footer-padding', modal.footerPadding)
+  }
+
+  // 应用提示组件变量
+  if (theme.notification) {
+    const notification = theme.notification
+
+    // Toast 提示
+    if (notification.toast) {
+      const toast = notification.toast
+      root.style.setProperty('--toast-bg-color', toast.backgroundColor)
+      root.style.setProperty('--toast-text-color', toast.textColor)
+      root.style.setProperty('--toast-radius', toast.radius)
+      root.style.setProperty('--toast-padding', toast.padding)
+      root.style.setProperty('--toast-success-color', toast.successColor)
+      root.style.setProperty('--toast-error-color', toast.errorColor)
+    }
+
+    // Alert 警告
+    if (notification.alert) {
+      const alert = notification.alert
+      root.style.setProperty('--alert-radius', alert.radius)
+      root.style.setProperty('--alert-padding', alert.padding)
+      root.style.setProperty('--alert-border-width', alert.borderWidth)
+      root.style.setProperty('--alert-info-bg-color', alert.infoBgColor)
+      root.style.setProperty('--alert-info-border-color', alert.infoBorderColor)
+      root.style.setProperty('--alert-success-bg-color', alert.successBgColor)
+      root.style.setProperty('--alert-success-border-color', alert.successBorderColor)
+      root.style.setProperty('--alert-warning-bg-color', alert.warningBgColor)
+      root.style.setProperty('--alert-warning-border-color', alert.warningBorderColor)
+      root.style.setProperty('--alert-error-bg-color', alert.errorBgColor)
+      root.style.setProperty('--alert-error-border-color', alert.errorBorderColor)
+    }
+
+    // Message 消息
+    if (notification.message) {
+      const message = notification.message
+      root.style.setProperty('--message-bg-color', message.backgroundColor)
+      root.style.setProperty('--message-text-color', message.textColor)
+      root.style.setProperty('--message-border-color', message.borderColor)
+      root.style.setProperty('--message-radius', message.radius)
+      root.style.setProperty('--message-padding', message.padding)
+    }
   }
 
   // 应用布局变量
@@ -340,20 +546,103 @@ export function applyTheme(theme: typeof themeConfig) {
 
     // Admin Header
     if (theme.header.admin) {
-      root.style.setProperty('--header-admin-height', theme.header.admin.height)
-      root.style.setProperty('--header-admin-bg-color', theme.header.admin.backgroundColor)
-      root.style.setProperty('--header-admin-border-color', theme.header.admin.borderColor)
-      root.style.setProperty('--header-admin-text-color', theme.header.admin.textColor)
-      root.style.setProperty('--header-admin-padding-x', theme.header.admin.paddingX)
+      root.style.setProperty('--admin-header-height', theme.header.admin.height)
+      root.style.setProperty('--admin-header-bg-color', theme.header.admin.backgroundColor)
+      root.style.setProperty('--admin-header-border-color', theme.header.admin.borderColor)
+      root.style.setProperty('--admin-header-text-color', theme.header.admin.textColor)
+      root.style.setProperty('--admin-header-padding-x', theme.header.admin.paddingX)
     }
 
     // Web Header
     if (theme.header.web) {
-      root.style.setProperty('--header-web-height', theme.header.web.height)
-      root.style.setProperty('--header-web-bg-color', theme.header.web.backgroundColor)
-      root.style.setProperty('--header-web-border-color', theme.header.web.borderColor)
-      root.style.setProperty('--header-web-text-color', theme.header.web.textColor)
-      root.style.setProperty('--header-web-padding-x', theme.header.web.paddingX)
+      root.style.setProperty('--web-header-height', theme.header.web.height)
+      root.style.setProperty('--web-header-bg-color', theme.header.web.backgroundColor)
+      root.style.setProperty('--web-header-border-color', theme.header.web.borderColor)
+      root.style.setProperty('--web-header-text-color', theme.header.web.textColor)
+      root.style.setProperty('--web-header-padding-x', theme.header.web.paddingX)
+    }
+  }
+
+  // 应用表格设置
+  if (theme.table) {
+    // 外围边框
+    if (theme.table.outerBorder !== undefined) {
+      root.style.setProperty('--table-outer-border-width', theme.table.outerBorder ? (theme.table.outerBorderWidth || '1px') : '0')
+    }
+    if (theme.table.outerBorderColor) {
+      root.style.setProperty('--table-outer-border-color', theme.table.outerBorderColor)
+    }
+    if (theme.table.borderRadius) {
+      root.style.setProperty('--table-border-radius', theme.table.borderRadius)
+    }
+
+    // 内部边框
+    if (theme.table.innerBorder !== undefined) {
+      root.style.setProperty('--table-inner-border-width', theme.table.innerBorder ? (theme.table.innerBorderWidth || '1px') : '0')
+    }
+    if (theme.table.innerBorderColor) {
+      root.style.setProperty('--table-inner-border-color', theme.table.innerBorderColor)
+    }
+
+    // 表头样式
+    if (theme.table.headerBackgroundColor) {
+      root.style.setProperty('--table-header-bg', theme.table.headerBackgroundColor)
+    }
+    if (theme.table.headerTextColor) {
+      root.style.setProperty('--table-header-color', theme.table.headerTextColor)
+    }
+    if (theme.table.headerFontWeight) {
+      root.style.setProperty('--table-header-weight', theme.table.headerFontWeight)
+    }
+    if ((theme.table as any).headerFontSize) {
+      root.style.setProperty('--table-header-font-size', (theme.table as any).headerFontSize)
+    }
+
+    // 行样式
+    if (theme.table.rowHeight) {
+      root.style.setProperty('--table-row-height', theme.table.rowHeight)
+    }
+    if (theme.table.rowPaddingX) {
+      root.style.setProperty('--table-padding-x', theme.table.rowPaddingX)
+    }
+    if (theme.table.rowPaddingY) {
+      root.style.setProperty('--table-padding-y', theme.table.rowPaddingY)
+    }
+    if ((theme.table as any).rowTextColor) {
+      root.style.setProperty('--table-row-color', (theme.table as any).rowTextColor)
+    }
+    if ((theme.table as any).rowFontSize) {
+      root.style.setProperty('--table-row-font-size', (theme.table as any).rowFontSize)
+    }
+    if (theme.table.hoverRowBackgroundColor) {
+      root.style.setProperty('--table-hover-bg', theme.table.hoverRowBackgroundColor)
+    }
+
+    // 斑马纹
+    if (theme.table.zebraStripeColor) {
+      root.style.setProperty('--table-stripe-color', theme.table.zebraStripeColor)
+    }
+
+    // 操作菜单
+    if ((theme.table as any).actionMenu) {
+      const menu = (theme.table as any).actionMenu
+      if (menu.triggerSize) root.style.setProperty('--action-menu-trigger-size', menu.triggerSize)
+      if (menu.triggerColor) root.style.setProperty('--action-menu-trigger-color', menu.triggerColor)
+      if (menu.triggerHoverColor) root.style.setProperty('--action-menu-trigger-hover-color', menu.triggerHoverColor)
+      if (menu.triggerHoverBg) root.style.setProperty('--action-menu-trigger-hover-bg', menu.triggerHoverBg)
+      if (menu.triggerActiveColor) root.style.setProperty('--action-menu-trigger-active-color', menu.triggerActiveColor)
+      if (menu.menuBg) root.style.setProperty('--action-menu-bg', menu.menuBg)
+      if (menu.menuBorder) root.style.setProperty('--action-menu-border', menu.menuBorder)
+      if (menu.menuShadow) root.style.setProperty('--action-menu-shadow', menu.menuShadow)
+      if (menu.menuRadius) root.style.setProperty('--action-menu-radius', menu.menuRadius)
+      if (menu.menuPadding) root.style.setProperty('--action-menu-padding', menu.menuPadding)
+      if (menu.itemPadding) root.style.setProperty('--action-menu-item-padding', menu.itemPadding)
+      if (menu.itemColor) root.style.setProperty('--action-menu-item-color', menu.itemColor)
+      if (menu.itemFontSize) root.style.setProperty('--action-menu-item-font-size', menu.itemFontSize)
+      if (menu.itemFontWeight) root.style.setProperty('--action-menu-item-font-weight', menu.itemFontWeight)
+      if (menu.itemHoverBg) root.style.setProperty('--action-menu-item-hover-bg', menu.itemHoverBg)
+      if (menu.itemDangerColor) root.style.setProperty('--action-menu-item-danger-color', menu.itemDangerColor)
+      if (menu.itemDangerHoverBg) root.style.setProperty('--action-menu-item-danger-hover-bg', menu.itemDangerHoverBg)
     }
   }
 }

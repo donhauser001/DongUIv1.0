@@ -19,38 +19,6 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { name: '控制台', icon: 'i-carbon-dashboard', path: '/admin' },
-  { name: 'AI 知识库', icon: 'i-carbon-document', path: '/admin/docs' },
-  {
-    name: '文档示例',
-    icon: 'i-carbon-notebook',
-    path: '/admin/doc-example',
-    children: [
-      { name: '文档列表', path: '/admin/doc-example/list' },
-      { name: '文档详情', path: '/admin/doc-example/detail/1' }, // 示例默认跳到 ID 1
-      { name: '文档编辑', path: '/admin/doc-example/edit/new' }, // 示例默认跳到新建
-    ]
-  },
-  {
-    name: '订单示例',
-    icon: 'i-carbon-shopping-cart',
-    path: '/admin/order-example',
-    children: [
-      { name: '订单列表', path: '/admin/order-example/list' },
-      { name: '数据中心', path: '/admin/order-example/data' },
-      { name: '订单详情', path: '/admin/order-example/detail/1' },
-      { name: '商品管理', path: '/admin/order-example/product/list' },
-    ]
-  },
-  { 
-    name: '列表示例', 
-    icon: 'i-carbon-list', 
-    path: '/admin/list-example',
-    children: [
-      { name: '传统列表', path: '/admin/list-example/basic' },
-      { name: '卡片列表', path: '/admin/list-example/card' },
-      { name: '媒体列表', path: '/admin/list-example/media' },
-    ]
-  },
   {
     name: '用户管理',
     icon: 'i-carbon-user',
@@ -77,9 +45,7 @@ const route = useRoute()
 
 // 控制展开状态 (默认展开所有匹配当前路由的父级)
 // 简单起见，这里用一个 Map 记录哪些父菜单是展开的
-const expandedKeys = ref<Record<string, boolean>>({
-  '/admin/list-example': true // 默认展开演示用
-})
+const expandedKeys = ref<Record<string, boolean>>({})
 
 const toggleExpand = (path: string) => {
   expandedKeys.value[path] = !expandedKeys.value[path]
@@ -528,20 +494,20 @@ const logoMarginStyle = computed(() => {
 }
 
 .layout-header {
-  height: var(--admin-header-height);
-  background-color: var(--admin-header-bg-color);
-  border-bottom: var(--border-width) solid var(--admin-header-border-color);
+  height: var(--header-admin-height);
+  background-color: var(--header-admin-bg-color);
+  border-bottom: var(--border-width) solid var(--header-admin-border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--admin-header-padding-x);
+  padding: 0 var(--header-admin-padding-x);
   flex-shrink: 0;
 }
 
 .page-title {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
-  color: var(--admin-header-text-color);
+  color: var(--header-admin-text-color);
   margin-bottom: 0;
 }
 

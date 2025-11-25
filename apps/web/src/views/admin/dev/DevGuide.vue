@@ -21,7 +21,7 @@ interface TocItem {
 }
 
 // 2. 自动扫描所有 .md 文件
-const modules = import.meta.glob('/src/docs/**/*.md', { as: 'raw', eager: true })
+const modules = import.meta.glob('/src/docs/**/*.md', { as: 'raw', eager: true }) as Record<string, string>
 
 // 3. 处理数据结构
 const categories = ref<DocCategory[]>([])
@@ -61,7 +61,9 @@ const initDocs = () => {
 // 使用 Token 解析方式，不依赖 renderer
 const renderer = new marked.Renderer()
 
-renderer.heading = (text, level) => {
+renderer.heading = (tokens: any) => {
+  const text = tokens.text || ''
+  const level = tokens.depth || 1
   const rawText = typeof text === 'object' && text !== null && 'text' in text
     ? (text as any).text
     : String(text)
@@ -117,31 +119,29 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex h-[calc(100vh-120px)] bg-white border-1 border-dong-border rounded-md overflow-hidden">
+  <div class="doc-guide-container">
     
     <!-- Left Sidebar: File Tree -->
-    <div class="w-64 bg-gray-50 border-r-1 border-dong-border flex flex-col overflow-y-auto shrink-0">
-      <div class="p-4 border-b-1 border-dong-border">
-        <h3 class="font-bold text-gray-800 flex items-center">
-          <span class="i-carbon-notebook mr-2 text-primary"></span>
+    <div class="doc-sidebar">
+      <div class="doc-sidebar-header">
+        <h3 class="doc-sidebar-title">
+          <span class="i-carbon-notebook doc-icon"></span>
           文档中心
         </h3>
       </div>
       
-      <div class="p-4 space-y-6">
-        <div v-for="cat in categories" :key="cat.name">
-          <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 pl-2">{{ cat.name }}</h4>
-          <div class="space-y-1">
+      <div class="doc-sidebar-content">
+        <div v-for="cat in categories" :key="cat.name" class="doc-category">
+          <h4 class="doc-category-title">{{ cat.name }}</h4>
+          <div class="doc-file-list">
             <button 
               v-for="doc in cat.files" 
               :key="doc.path"
               @click="selectDoc(doc)"
-              class="w-full text-left px-3 py-2 rounded-md text-sm transition-colors flex items-center"
-              :class="currentDoc?.path === doc.path 
-                ? 'bg-white text-primary shadow-sm border-1 border-dong-border' 
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900'"
+              class="doc-file-item"
+              :class="{ 'active': currentDoc?.path === doc.path }"
             >
-              <span class="i-carbon-document mr-2 opacity-50"></span>
+              <span class="i-carbon-document doc-file-icon"></span>
               {{ doc.name }}
             </button>
           </div>
@@ -150,41 +150,38 @@ onMounted(() => {
     </div>
 
     <!-- Middle: Main Content -->
-    <div class="flex-1 overflow-y-auto p-8 scroll-smooth">
-      <div v-if="currentDoc" class="max-w-3xl mx-auto">
-        <div class="mb-6 border-b-1 border-gray-100 pb-4">
-          <h1 class="text-2xl font-bold text-gray-900">{{ currentDoc.name }}</h1>
-          <p class="text-xs text-gray-400 mt-2 font-mono">{{ currentDoc.path }}</p>
+    <div class="doc-main-content">
+      <div v-if="currentDoc" class="doc-content-wrapper">
+        <div class="doc-content-header">
+          <h1 class="doc-content-title">{{ currentDoc.name }}</h1>
+          <p class="doc-content-path">{{ currentDoc.path }}</p>
         </div>
         
         <!-- Markdown Render Area -->
         <article class="markdown-content" v-html="renderedContent"></article>
       </div>
       
-      <div v-else class="h-full flex items-center justify-center text-gray-400">
-        <p>请选择左侧文档查看</p>
+      <div v-else class="doc-empty-state">
+        <span class="i-carbon-document-blank doc-empty-icon"></span>
+        <p class="doc-empty-text">请选择左侧文档查看</p>
       </div>
     </div>
 
     <!-- Right Sidebar: Table of Contents -->
-    <div class="w-64 border-l-1 border-dong-border bg-white p-4 shrink-0 flex flex-col">
-      <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">本页目录</h4>
+    <div class="doc-toc">
+      <h4 class="doc-toc-title">本页目录</h4>
       
-      <div v-if="toc.length === 0" class="text-xs text-gray-300 italic">
+      <div v-if="toc.length === 0" class="doc-toc-empty">
         无目录
       </div>
 
-      <ul v-else class="space-y-1 text-sm overflow-y-auto flex-1">
-        <li v-for="item in toc" :key="item.id" class="transition-colors duration-200">
+      <ul v-else class="doc-toc-list">
+        <li v-for="item in toc" :key="item.id" class="doc-toc-item">
           <a 
             href="#" 
             @click.prevent="scrollToHeader(item.id)"
-            class="truncate block py-1"
-            :class="[
-              item.level === 3 
-                ? 'pl-6 text-xs text-gray-500 border-l-2 border-gray-100 hover:border-primary hover:text-primary' 
-                : 'mt-3 font-bold text-gray-800 hover:text-primary'
-            ]"
+            class="doc-toc-link"
+            :class="{ 'level-3': item.level === 3 }"
             :title="item.text"
           >
             {{ item.text }}
@@ -196,121 +193,500 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
-/* Markdown 内容样式 - 现在 Tailwind Reset 已移除，样式应该能正常工作 */
-.markdown-content {
-  line-height: 1.6;
-  color: #4b5563;
+<style scoped>
+/* 文档指南容器 */
+.doc-guide-container {
+  display: flex;
+  height: calc(100vh - 120px);
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
-/* 标题样式 - 明确的、可控的样式定义 */
-.markdown-content h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #111827;
-  line-height: 1.2;
+/* 左侧边栏 - 文件树 */
+.doc-sidebar {
+  width: 20rem;
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
-.markdown-content h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  color: #111827;
+.doc-sidebar-header {
+  padding: 1.5rem 1.25rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.doc-sidebar-title {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  font-size: 0.9375rem;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.doc-icon {
+  margin-right: 0.625rem;
+  color: var(--color-primary);
+  font-size: 1.125rem;
+}
+
+.doc-sidebar-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.doc-category {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.doc-category-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.5rem 0;
+  padding-left: 0.75rem;
+}
+
+.doc-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.doc-file-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 450;
+  letter-spacing: -0.01em;
+}
+
+.doc-file-item:hover {
+  background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
+  color: var(--color-text-primary);
+  transform: translateX(2px);
+}
+
+.doc-file-item.active {
+  background-color: transparent;
+  color: var(--color-primary);
+  font-weight: 600;
+  position: relative;
+}
+
+.doc-file-item.active::after {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.375rem;
+  height: 1px;
+  background-color: var(--color-primary);
+}
+
+.doc-file-icon {
+  margin-right: 0.625rem;
+  opacity: 0.5;
+  font-size: 0.9375rem;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.doc-file-item:hover .doc-file-icon {
+  opacity: 0.7;
+}
+
+.doc-file-item.active .doc-file-icon {
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+/* 主内容区 */
+.doc-main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  scroll-behavior: smooth;
+}
+
+.doc-content-wrapper {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.doc-content-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.doc-content-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.02em;
   line-height: 1.3;
 }
 
-.markdown-content h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #374151;
-  line-height: 1.4;
+.doc-content-path {
+  font-size: 0.6875rem;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  margin: 0;
+  opacity: 0.7;
 }
 
+.doc-empty-state {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-tertiary);
+  gap: 1rem;
+}
+
+.doc-empty-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.doc-empty-text {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* 右侧边栏 - 目录 */
+.doc-toc {
+  width: 20rem;
+  border-left: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  padding: 1.5rem 1.25rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-toc-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 1.25rem 0;
+}
+
+.doc-toc-empty {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+.doc-toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.doc-toc-item {
+  margin: 0;
+}
+
+.doc-toc-link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 0.5rem;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+
+.doc-toc-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0;
+  background-color: var(--color-primary);
+  transition: height 0.15s ease;
+  border-radius: 2px;
+}
+
+.doc-toc-link:hover {
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
+  padding-left: 0.875rem;
+}
+
+.doc-toc-link:hover::before {
+  height: 60%;
+}
+
+.doc-toc-link.level-3 {
+  padding-left: 2rem;
+  font-size: 0.75rem;
+  font-weight: 450;
+  color: var(--color-text-tertiary);
+  border-left: none;
+  margin-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-toc-link.level-3::before {
+  display: none;
+}
+
+.doc-toc-link.level-3:hover {
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
+  padding-left: 2.125rem;
+}
+</style>
+
+<style>
+/* Markdown 内容样式 - 全局样式，不使用 scoped */
+.markdown-content {
+  line-height: var(--font-body-height, 1.6);
+  color: var(--color-text-secondary);
+  font-size: var(--font-body-size, 1rem);
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+}
+
+/* 标题样式 */
+.markdown-content h1 {
+  font-size: var(--font-h1-size, 2rem);
+  font-weight: var(--font-h1-weight, 700);
+  line-height: var(--font-h1-height, 1.2);
+  margin-top: var(--font-h1-margin-top, 0);
+  margin-bottom: var(--font-h1-margin-bottom, 1.5rem);
+  color: var(--color-text-primary);
+}
+
+.markdown-content h2 {
+  font-size: var(--font-h2-size, 1.5rem);
+  font-weight: var(--font-h2-weight, 700);
+  line-height: var(--font-h2-height, 1.3);
+  margin-top: var(--font-h2-margin-top, 2.5rem);
+  margin-bottom: var(--font-h2-margin-bottom, 1rem);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.markdown-content h3 {
+  font-size: var(--font-h3-size, 1.25rem);
+  font-weight: var(--font-h3-weight, 600);
+  line-height: var(--font-h3-height, 1.4);
+  margin-top: var(--font-h3-margin-top, 2rem);
+  margin-bottom: var(--font-h3-margin-bottom, 0.75rem);
+  color: var(--color-text-primary);
+}
+
+.markdown-content h4 {
+  font-size: var(--font-h4-size, 1.125rem);
+  font-weight: var(--font-h4-weight, 600);
+  line-height: var(--font-h4-height, 1.4);
+  margin-top: var(--font-h4-margin-top, 1.5rem);
+  margin-bottom: var(--font-h4-margin-bottom, 0.5rem);
+  color: var(--color-text-primary);
+}
+
+/* 段落和列表 */
 .markdown-content p {
-  margin-bottom: 1rem;
-  line-height: 1.6;
-  color: #4b5563;
+  margin-top: var(--font-body-margin-top, 0);
+  margin-bottom: var(--font-body-margin-bottom, 1.25rem);
+  line-height: var(--font-body-height, 1.6);
+  color: var(--color-text-secondary);
+  font-size: var(--font-body-size, 1rem);
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-body-size, 1rem);
+  line-height: var(--font-body-height, 1.6);
 }
 
 .markdown-content ul {
   list-style-type: disc;
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
 }
 
 .markdown-content ol {
   list-style-type: decimal;
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
 }
 
+.markdown-content li {
+  margin-bottom: 0.5rem;
+  line-height: var(--font-body-height, 1.6);
+}
+
+/* 代码块 */
 .markdown-content pre {
-  background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 0.375rem;
+  background-color: var(--color-bg-secondary);
+  padding: 1.25rem;
+  border-radius: 0.5rem;
   overflow-x: auto;
-  border: 1px solid #e5e7eb;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono, 'Monaco', 'Menlo', monospace);
   font-size: 0.875rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
 }
 
 .markdown-content code {
-  background: #f3f4f6;
-  padding: 0.2rem 0.4rem;
+  background-color: var(--color-bg-secondary);
+  padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  color: #03624C;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  color: var(--color-primary);
+  font-family: var(--font-mono, 'Monaco', 'Menlo', monospace);
 }
 
 .markdown-content pre code {
   background: transparent;
-  color: inherit;
+  color: var(--color-text-primary);
   padding: 0;
+  font-size: 0.875rem;
 }
 
+/* 引用 */
 .markdown-content blockquote {
-  border-left: 4px solid #e5e7eb;
-  padding-left: 1rem;
-  color: #6b7280;
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1.25rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: var(--color-text-secondary);
   font-style: italic;
-  margin-bottom: 1rem;
+  margin: var(--font-quote-margin-top, 1.5rem) 0 var(--font-quote-margin-bottom, 1.5rem);
+  background-color: color-mix(in srgb, var(--color-primary), transparent 96%);
+  border-radius: 0.375rem;
+  font-size: var(--font-quote-size, var(--font-body-size, 1rem));
+  line-height: var(--font-quote-height, var(--font-body-height, 1.6));
 }
 
+/* 表格 */
 .markdown-content table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  font-size: var(--font-body-size, 1rem);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 .markdown-content th {
   text-align: left;
-  padding: 0.5rem;
-  border-bottom: 2px solid #e5e7eb;
+  padding: 0.875rem 1rem;
+  border-bottom: 2px solid var(--color-border);
   font-weight: 600;
-  background: #f9fafb;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: var(--font-body-size, 1rem);
 }
 
 .markdown-content td {
-  padding: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: var(--font-body-size, 1rem);
+  line-height: var(--font-body-height, 1.6);
 }
 
+.markdown-content tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-content tr:hover {
+  background-color: color-mix(in srgb, var(--color-bg-secondary), transparent 50%);
+}
+
+/* 链接 */
 .markdown-content a {
-  color: #03624C;
+  color: var(--color-primary);
   text-decoration: underline;
+  transition: color 0.2s ease;
 }
 
 .markdown-content a:hover {
-  color: #00cf3f;
+  color: var(--color-secondary);
+}
+
+/* 分隔线 */
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2rem 0;
+}
+
+/* 图片 */
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid var(--color-border);
+}
+
+/* 强调 */
+.markdown-content strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.markdown-content em {
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* 删除线 */
+.markdown-content del {
+  text-decoration: line-through;
+  color: var(--color-text-tertiary);
+  opacity: 0.7;
 }
 </style>

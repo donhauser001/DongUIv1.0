@@ -271,73 +271,177 @@ const showToastPreview = () => {
     <!-- 预览区域 -->
     <div class="info-card">
       <h3 class="nav-title" style="margin-bottom: 1rem;">实时预览</h3>
-      
-      <div class="preview-section">
+      <div class="settings-group">
+        <!-- 提示框 -->
+        <div class="info-card-tip">
+          <span class="i-carbon-information info-card-tip-icon"></span>
+          <p class="info-card-tip-text">
+            提示：{{ activeNotifType === 'toast' ? '点击按钮可以查看 Toast 在真实位置的显示效果' : activeNotifType === 'alert' ? 'Alert 通常用于页面内的提示信息' : 'Message 通常用于系统消息通知' }}
+          </p>
+        </div>
+
         <!-- Toast 预览 -->
-        <div v-if="activeNotifType === 'toast'">
-          <div class="preview-row">
-            <span class="preview-label">点击按钮查看 Toast 效果</span>
-            <button class="btn-primary" @click="showToastPreview">显示 Toast</button>
+        <div v-if="activeNotifType === 'toast'" class="notification-preview-container">
+          <div class="preview-item">
+            <label class="preview-label">点击查看真实 Toast 效果</label>
+            <button class="btn-primary" @click="showToastPreview">
+              <span class="i-carbon-notification"></span>
+              显示 Toast
+            </button>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">Toast 样式示例</span>
-            <div class="toast-base">
-              <span>✓</span>
+
+          <div class="preview-item">
+            <label class="preview-label">成功提示样式</label>
+            <div class="toast-preview" :style="{
+              backgroundColor: config.notification.toast.backgroundColor,
+              color: config.notification.toast.textColor,
+              borderRadius: config.notification.toast.radius,
+              padding: config.notification.toast.padding,
+            }">
+              <span class="i-carbon-checkmark-filled" :style="{ color: config.notification.toast.successColor }"></span>
               <span>操作成功！</span>
+            </div>
+          </div>
+
+          <div class="preview-item">
+            <label class="preview-label">错误提示样式</label>
+            <div class="toast-preview" :style="{
+              backgroundColor: config.notification.toast.backgroundColor,
+              color: config.notification.toast.textColor,
+              borderRadius: config.notification.toast.radius,
+              padding: config.notification.toast.padding,
+            }">
+              <span class="i-carbon-close-filled" :style="{ color: config.notification.toast.errorColor }"></span>
+              <span>操作失败，请重试</span>
+            </div>
+          </div>
+
+          <div class="preview-item">
+            <label class="preview-label">当前配置</label>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary);">
+              <div>
+                <strong style="color: var(--color-text-primary);">位置：</strong>
+                {{ positionOptions.find(o => o.value === config.notification.toast.position)?.label }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">圆角：</strong>
+                {{ config.notification.toast.radius }}
+              </div>
+              <div>
+                <strong style="color: var(--color-text-primary);">内边距：</strong>
+                {{ config.notification.toast.padding }}
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Alert 预览 -->
-        <div v-else-if="activeNotifType === 'alert'">
-          <div class="preview-row">
-            <span class="preview-label">信息提示</span>
-            <div class="alert-base alert-info">
-              <span>ℹ️</span>
-              <span>这是一条信息提示</span>
+        <div v-else-if="activeNotifType === 'alert'" class="notification-preview-container">
+          <div class="preview-item">
+            <label class="preview-label">信息提示 (Info)</label>
+            <div class="alert-preview" :style="{
+              backgroundColor: config.notification.alert.infoBgColor,
+              borderRadius: config.notification.alert.radius,
+              padding: config.notification.alert.padding,
+              border: `${config.notification.alert.borderWidth} solid ${config.notification.alert.infoBorderColor || '#3b82f6'}`,
+            }">
+              <span class="i-carbon-information-filled" style="color: #3b82f6;"></span>
+              <span style="color: #1e40af;">这是一条信息提示</span>
             </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">成功提示</span>
-            <div class="alert-base alert-success">
-              <span>✓</span>
-              <span>操作成功完成</span>
+
+          <div class="preview-item">
+            <label class="preview-label">成功提示 (Success)</label>
+            <div class="alert-preview" :style="{
+              backgroundColor: config.notification.alert.successBgColor,
+              borderRadius: config.notification.alert.radius,
+              padding: config.notification.alert.padding,
+              border: `${config.notification.alert.borderWidth} solid ${config.notification.alert.successBorderColor || '#10b981'}`,
+            }">
+              <span class="i-carbon-checkmark-filled" style="color: #10b981;"></span>
+              <span style="color: #065f46;">操作成功完成</span>
             </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">警告提示</span>
-            <div class="alert-base alert-warning">
-              <span>⚠️</span>
-              <span>请注意这个警告信息</span>
+
+          <div class="preview-item">
+            <label class="preview-label">警告提示 (Warning)</label>
+            <div class="alert-preview" :style="{
+              backgroundColor: config.notification.alert.warningBgColor,
+              borderRadius: config.notification.alert.radius,
+              padding: config.notification.alert.padding,
+              border: `${config.notification.alert.borderWidth} solid ${config.notification.alert.warningBorderColor || '#f59e0b'}`,
+            }">
+              <span class="i-carbon-warning-filled" style="color: #f59e0b;"></span>
+              <span style="color: #92400e;">请注意这个警告信息</span>
             </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">错误提示</span>
-            <div class="alert-base alert-error">
-              <span>✕</span>
-              <span>操作失败，请重试</span>
+
+          <div class="preview-item">
+            <label class="preview-label">错误提示 (Error)</label>
+            <div class="alert-preview" :style="{
+              backgroundColor: config.notification.alert.errorBgColor,
+              borderRadius: config.notification.alert.radius,
+              padding: config.notification.alert.padding,
+              border: `${config.notification.alert.borderWidth} solid ${config.notification.alert.errorBorderColor || '#ef4444'}`,
+            }">
+              <span class="i-carbon-close-filled" style="color: #ef4444;"></span>
+              <span style="color: #991b1b;">操作失败，请重试</span>
             </div>
           </div>
         </div>
 
         <!-- Message 预览 -->
-        <div v-else-if="activeNotifType === 'message'">
-          <div class="preview-row">
-            <span class="preview-label">普通消息</span>
-            <div class="message-base">
+        <div v-else-if="activeNotifType === 'message'" class="notification-preview-container">
+          <div class="preview-item">
+            <label class="preview-label">普通消息</label>
+            <div class="message-preview" :style="{
+              backgroundColor: config.notification.message.backgroundColor,
+              color: config.notification.message.textColor,
+              borderRadius: config.notification.message.radius,
+              padding: config.notification.message.padding,
+              border: `1px solid ${config.notification.message.borderColor}`,
+            }">
               <strong>系统通知</strong>
-              <p style="margin: 0.5rem 0 0 0;">您有一条新消息</p>
+              <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">您有一条新消息</p>
             </div>
           </div>
-          <div class="preview-row">
-            <span class="preview-label">带关闭按钮</span>
-            <div class="message-base">
-              <div style="display: flex; justify-content: space-between; align-items: start;">
+
+          <div class="preview-item">
+            <label class="preview-label">带图标消息</label>
+            <div class="message-preview" :style="{
+              backgroundColor: config.notification.message.backgroundColor,
+              color: config.notification.message.textColor,
+              borderRadius: config.notification.message.radius,
+              padding: config.notification.message.padding,
+              border: `1px solid ${config.notification.message.borderColor}`,
+            }">
+              <div style="display: flex; gap: 0.75rem;">
+                <span class="i-carbon-notification" style="font-size: 1.5rem; flex-shrink: 0;"></span>
                 <div>
                   <strong>系统通知</strong>
-                  <p style="margin: 0.5rem 0 0 0;">您有一条新消息</p>
+                  <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">您有一条新消息需要查看</p>
                 </div>
-                <button style="background: none; border: none; font-size: 1.25rem; cursor: pointer;">×</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="preview-item">
+            <label class="preview-label">带关闭按钮</label>
+            <div class="message-preview" :style="{
+              backgroundColor: config.notification.message.backgroundColor,
+              color: config.notification.message.textColor,
+              borderRadius: config.notification.message.radius,
+              padding: config.notification.message.padding,
+              border: `1px solid ${config.notification.message.borderColor}`,
+            }">
+              <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                <div>
+                  <strong>系统通知</strong>
+                  <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">您有一条新消息</p>
+                </div>
+                <button style="background: none; border: none; font-size: 1.25rem; cursor: pointer; opacity: 0.5;">
+                  <span class="i-carbon-close"></span>
+                </button>
               </div>
             </div>
           </div>
@@ -345,41 +449,27 @@ const showToastPreview = () => {
       </div>
 
       <!-- Toast 实际显示 -->
-      <Transition name="toast">
-        <div v-if="showToast" class="toast-overlay">
-          <div class="toast-base">
-            <span>✓</span>
-            <span>这是一个 Toast 提示！</span>
+      <Teleport to="body">
+        <Transition name="toast">
+          <div v-if="showToast" :class="`toast-overlay toast-${config.notification.toast.position}`">
+            <div class="toast-preview" :style="{
+              backgroundColor: config.notification.toast.backgroundColor,
+              color: config.notification.toast.textColor,
+              borderRadius: config.notification.toast.radius,
+              padding: config.notification.toast.padding,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            }">
+              <span class="i-carbon-checkmark-filled" :style="{ color: config.notification.toast.successColor }"></span>
+              <span>这是一个 Toast 提示！</span>
+            </div>
           </div>
-        </div>
-      </Transition>
+        </Transition>
+      </Teleport>
     </div>
   </section>
 </template>
 
 <style scoped>
-.toast-overlay {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 9999;
-}
-
-.toast-enter-active,
-.toast-leave-active {
-  transition: all 0.3s ease;
-}
-
-.toast-enter-from {
-  opacity: 0;
-  transform: translateY(-1rem);
-}
-
-.toast-leave-to {
-  opacity: 0;
-  transform: translateY(-1rem);
-}
-
 .tab-btn {
   padding: 0.375rem 0.75rem;
   border-radius: 0.375rem;
@@ -441,6 +531,94 @@ const showToastPreview = () => {
   right: 0;
   height: 2px;
   background-color: var(--color-primary);
+}
+
+/* 预览容器 */
+.notification-preview-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.preview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.preview-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Toast 样式 */
+.toast-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.toast-overlay {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast-top-center {
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toast-top-right {
+  top: 1rem;
+  right: 1rem;
+}
+
+.toast-bottom-center {
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toast-bottom-right {
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.3s ease;
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(-1rem);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(-1rem);
+}
+
+/* Alert 样式 */
+.alert-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+/* Message 样式 */
+.message-preview {
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 </style>
 

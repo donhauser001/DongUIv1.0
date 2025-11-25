@@ -143,6 +143,11 @@
     font-size: 0.875rem;
 }
 
+/* 为 select 元素添加右侧内边距，避免箭头贴边 */
+select.form-input {
+    padding-right: 2.5rem;
+}
+
 .form-input:focus {
     outline: none;
     border-color: var(--color-primary);
@@ -165,6 +170,11 @@
     appearance: none;
     background: none;
     overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .color-preview::-webkit-color-swatch-wrapper {
@@ -408,4 +418,88 @@
 .settings-field-label {
     font-size: 0.75rem;
     color: var(--color-text-secondary);
+}
+
+/* 文本式选项卡 */
+.text-tab-group {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0;
+}
+
+.text-tab-btn {
+    padding: 0.5rem 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    font-weight: 400;
+}
+
+.text-tab-btn:hover {
+    color: var(--color-text-primary);
+}
+
+.text-tab-btn.active {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.text-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--color-primary);
+}
+
+/* 预览容器通用样式 */
+.component-preview-container,
+.modal-preview-container,
+.notification-preview-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* 预览容器的直接子元素也需要 flex 布局 */
+.component-preview-container>div,
+.modal-preview-container>div,
+.notification-preview-container>div {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.preview-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.preview-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.preview-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-bg-secondary);
+    margin-bottom: 0.5rem;
 }

@@ -138,39 +138,265 @@ const radiusOptions = [
     <!-- 预览区域 -->
     <div class="info-card">
       <h3 class="nav-title" style="margin-bottom: 1rem;">实时预览</h3>
-      
-      <div class="preview-section">
-        <div class="preview-row">
-          <span class="preview-label">小号标签</span>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <span :class="`tag-${activeTagType}`" data-size="small">标签</span>
-            <span :class="`tag-${activeTagType}`" data-size="small">✓ 已完成</span>
-            <span :class="`tag-${activeTagType}`" data-size="small">新</span>
-          </div>
+      <div class="settings-group">
+        <!-- 提示框 -->
+        <div class="info-card-tip">
+          <span class="i-carbon-information info-card-tip-icon"></span>
+          <p class="info-card-tip-text">
+            提示：左侧修改的样式会实时反映在下方的标签预览中。
+          </p>
         </div>
-        <div class="preview-row">
-          <span class="preview-label">标准标签</span>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <span :class="`tag-${activeTagType}`" data-size="medium">标签</span>
-            <span :class="`tag-${activeTagType}`" data-size="medium">✓ 已完成</span>
-            <span :class="`tag-${activeTagType}`" data-size="medium">新功能</span>
+
+        <!-- 预览区域 -->
+        <div class="tag-preview-container">
+          <!-- 四种类型对比 -->
+          <div class="preview-item">
+            <label class="preview-label">四种类型对比</label>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <span class="preview-tag" :style="{
+                fontSize: config.tag.default.size === 'small' ? '0.75rem' : config.tag.default.size === 'large' ? '1rem' : '0.875rem',
+                padding: config.tag.default.size === 'small' ? '0.125rem 0.5rem' : config.tag.default.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem',
+                borderRadius: config.tag.default.radius,
+                backgroundColor: config.tag.default.backgroundColor,
+                color: config.tag.default.textColor,
+                border: `1px solid ${config.tag.default.borderColor}`,
+              }">
+                默认
+              </span>
+              <span class="preview-tag" :style="{
+                fontSize: config.tag.success.size === 'small' ? '0.75rem' : config.tag.success.size === 'large' ? '1rem' : '0.875rem',
+                padding: config.tag.success.size === 'small' ? '0.125rem 0.5rem' : config.tag.success.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem',
+                borderRadius: config.tag.success.radius,
+                backgroundColor: config.tag.success.backgroundColor,
+                color: config.tag.success.textColor,
+                border: `1px solid ${config.tag.success.borderColor}`,
+              }">
+                成功
+              </span>
+              <span class="preview-tag" :style="{
+                fontSize: config.tag.warning.size === 'small' ? '0.75rem' : config.tag.warning.size === 'large' ? '1rem' : '0.875rem',
+                padding: config.tag.warning.size === 'small' ? '0.125rem 0.5rem' : config.tag.warning.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem',
+                borderRadius: config.tag.warning.radius,
+                backgroundColor: config.tag.warning.backgroundColor,
+                color: config.tag.warning.textColor,
+                border: `1px solid ${config.tag.warning.borderColor}`,
+              }">
+                警告
+              </span>
+              <span class="preview-tag" :style="{
+                fontSize: config.tag.danger.size === 'small' ? '0.75rem' : config.tag.danger.size === 'large' ? '1rem' : '0.875rem',
+                padding: config.tag.danger.size === 'small' ? '0.125rem 0.5rem' : config.tag.danger.size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem',
+                borderRadius: config.tag.danger.radius,
+                backgroundColor: config.tag.danger.backgroundColor,
+                color: config.tag.danger.textColor,
+                border: `1px solid ${config.tag.danger.borderColor}`,
+              }">
+                危险
+              </span>
+            </div>
           </div>
-        </div>
-        <div class="preview-row">
-          <span class="preview-label">大号标签</span>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <span :class="`tag-${activeTagType}`" data-size="large">标签</span>
-            <span :class="`tag-${activeTagType}`" data-size="large">✓ 已完成</span>
-            <span :class="`tag-${activeTagType}`" data-size="large">新功能上线</span>
+
+          <!-- 当前选中类型 - 不同尺寸 -->
+          <div class="preview-item">
+            <label class="preview-label">{{ activeTagType === 'default' ? '默认' : activeTagType === 'success' ? '成功' : activeTagType === 'warning' ? '警告' : '危险' }}标签 - 三种尺寸</label>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+              <span class="preview-tag" :style="{
+                fontSize: '0.75rem',
+                padding: '0.125rem 0.5rem',
+                borderRadius: config.tag[activeTagType].radius,
+                backgroundColor: config.tag[activeTagType].backgroundColor,
+                color: config.tag[activeTagType].textColor,
+                border: `1px solid ${config.tag[activeTagType].borderColor}`,
+              }">
+                小号
+              </span>
+              <span class="preview-tag" :style="{
+                fontSize: '0.875rem',
+                padding: '0.25rem 0.75rem',
+                borderRadius: config.tag[activeTagType].radius,
+                backgroundColor: config.tag[activeTagType].backgroundColor,
+                color: config.tag[activeTagType].textColor,
+                border: `1px solid ${config.tag[activeTagType].borderColor}`,
+              }">
+                标准
+              </span>
+              <span class="preview-tag" :style="{
+                fontSize: '1rem',
+                padding: '0.375rem 0.875rem',
+                borderRadius: config.tag[activeTagType].radius,
+                backgroundColor: config.tag[activeTagType].backgroundColor,
+                color: config.tag[activeTagType].textColor,
+                border: `1px solid ${config.tag[activeTagType].borderColor}`,
+              }">
+                大号
+              </span>
+            </div>
           </div>
-        </div>
-        <div class="preview-row">
-          <span class="preview-label">所有类型对比</span>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <span class="tag-default" data-size="medium">默认</span>
-            <span class="tag-success" data-size="medium">成功</span>
-            <span class="tag-warning" data-size="medium">警告</span>
-            <span class="tag-danger" data-size="medium">危险</span>
+
+          <!-- 当前选中类型 - 带图标 -->
+          <div class="preview-item">
+            <label class="preview-label">{{ activeTagType === 'default' ? '默认' : activeTagType === 'success' ? '成功' : activeTagType === 'warning' ? '警告' : '危险' }}标签 - 带图标</label>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <span class="preview-tag" :style="{
+                fontSize: config.tag[activeTagType].size === 'small' ? '0.75rem' : config.tag[activeTagType].size === 'large' ? '1rem' : '0.875rem',
+                padding: config.tag[activeTagType].size === 'small' ? '0.125rem 0.5rem' : config.tag[activeTagType].size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem',
+                borderRadius: config.tag[activeTagType].radius,
+                backgroundColor: config.tag[activeTagType].backgroundColor,
+                color: config.tag[activeTagType].textColor,
+                border: `1px solid ${config.tag[activeTagType].borderColor}`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem'
+              }">
+                <span :class="activeTagType === 'success' ? 'i-carbon-checkmark-filled' : activeTagType === 'warning' ? 'i-carbon-warning-alt-filled' : activeTagType === 'danger' ? 'i-carbon-close-filled' : 'i-carbon-information-filled'"></span>
+                {{ activeTagType === 'default' ? '信息' : activeTagType === 'success' ? '已完成' : activeTagType === 'warning' ? '待处理' : '已关闭' }}
+              </span>
+              <span class="preview-tag" :style="{
+                fontSize: config.tag[activeTagType].size === 'small' ? '0.75rem' : config.tag[activeTagType].size === 'large' ? '1rem' : '0.875rem',
+                padding: config.tag[activeTagType].size === 'small' ? '0.125rem 0.5rem' : config.tag[activeTagType].size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem',
+                borderRadius: config.tag[activeTagType].radius,
+                backgroundColor: config.tag[activeTagType].backgroundColor,
+                color: config.tag[activeTagType].textColor,
+                border: `1px solid ${config.tag[activeTagType].borderColor}`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem'
+              }">
+                <span class="i-carbon-user"></span>
+                管理员
+              </span>
+              <span class="preview-tag" :style="{
+                fontSize: config.tag[activeTagType].size === 'small' ? '0.75rem' : config.tag[activeTagType].size === 'large' ? '1rem' : '0.875rem',
+                padding: config.tag[activeTagType].size === 'small' ? '0.125rem 0.5rem' : config.tag[activeTagType].size === 'large' ? '0.375rem 0.875rem' : '0.25rem 0.75rem',
+                borderRadius: config.tag[activeTagType].radius,
+                backgroundColor: config.tag[activeTagType].backgroundColor,
+                color: config.tag[activeTagType].textColor,
+                border: `1px solid ${config.tag[activeTagType].borderColor}`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem'
+              }">
+                <span class="i-carbon-tag"></span>
+                标签
+              </span>
+            </div>
+          </div>
+
+          <!-- 实际应用场景 -->
+          <div class="preview-item">
+            <label class="preview-label">实际应用场景</label>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <!-- 用户状态 -->
+              <div>
+                <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin: 0 0 0.5rem 0;">用户状态：</p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.success.radius,
+                    backgroundColor: config.tag.success.backgroundColor,
+                    color: config.tag.success.textColor,
+                    border: `1px solid ${config.tag.success.borderColor}`,
+                  }">
+                    在线
+                  </span>
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.warning.radius,
+                    backgroundColor: config.tag.warning.backgroundColor,
+                    color: config.tag.warning.textColor,
+                    border: `1px solid ${config.tag.warning.borderColor}`,
+                  }">
+                    离开
+                  </span>
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.default.radius,
+                    backgroundColor: config.tag.default.backgroundColor,
+                    color: config.tag.default.textColor,
+                    border: `1px solid ${config.tag.default.borderColor}`,
+                  }">
+                    离线
+                  </span>
+                </div>
+              </div>
+
+              <!-- 任务优先级 -->
+              <div>
+                <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin: 0 0 0.5rem 0;">任务优先级：</p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.danger.radius,
+                    backgroundColor: config.tag.danger.backgroundColor,
+                    color: config.tag.danger.textColor,
+                    border: `1px solid ${config.tag.danger.borderColor}`,
+                  }">
+                    紧急
+                  </span>
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.warning.radius,
+                    backgroundColor: config.tag.warning.backgroundColor,
+                    color: config.tag.warning.textColor,
+                    border: `1px solid ${config.tag.warning.borderColor}`,
+                  }">
+                    重要
+                  </span>
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.default.radius,
+                    backgroundColor: config.tag.default.backgroundColor,
+                    color: config.tag.default.textColor,
+                    border: `1px solid ${config.tag.default.borderColor}`,
+                  }">
+                    普通
+                  </span>
+                </div>
+              </div>
+
+              <!-- 文章分类 -->
+              <div>
+                <p style="font-size: 0.75rem; color: var(--color-text-secondary); margin: 0 0 0.5rem 0;">文章分类：</p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.default.radius,
+                    backgroundColor: config.tag.default.backgroundColor,
+                    color: config.tag.default.textColor,
+                    border: `1px solid ${config.tag.default.borderColor}`,
+                  }">
+                    技术
+                  </span>
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.default.radius,
+                    backgroundColor: config.tag.default.backgroundColor,
+                    color: config.tag.default.textColor,
+                    border: `1px solid ${config.tag.default.borderColor}`,
+                  }">
+                    设计
+                  </span>
+                  <span class="preview-tag" :style="{
+                    fontSize: '0.75rem',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: config.tag.default.radius,
+                    backgroundColor: config.tag.default.backgroundColor,
+                    color: config.tag.default.textColor,
+                    border: `1px solid ${config.tag.default.borderColor}`,
+                  }">
+                    产品
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -240,6 +466,33 @@ const radiusOptions = [
   right: 0;
   height: 2px;
   background-color: var(--color-primary);
+}
+
+.tag-preview-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.preview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.preview-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.preview-tag {
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: all 0.2s ease;
 }
 </style>
 

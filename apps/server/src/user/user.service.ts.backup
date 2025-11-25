@@ -1,0 +1,345 @@
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+
+export interface CreateUserDto {
+  email: string;
+  name: string;
+  phone?: string;
+  password: string;
+  roleId?: string; // 改为 roleId
+  avatar?: string;
+  gender?: 'male' | 'female' | 'other';
+  birthday?: string;
+  address?: string;
+  bio?: string;
+}
+
+export interface UpdateUserDto {
+  name?: string;
+  email?: string;
+  phone?: string;
+  roleId?: string; // 改为 roleId
+  avatar?: string;
+  status?: boolean;
+  password?: string;
+  gender?: 'male' | 'female' | 'other';
+  birthday?: string;
+  address?: string;
+  bio?: string;
+}
+
+@Injectable()
+export class UserService {
+  constructor(private prisma: PrismaService) { }
+
+  async findAll(params?: { search?: string; role?: string; status?: boolean }) {
+    const where: any = {};
+
+    if (params?.search) {
+      where.OR = [
+        { name: { contains: params.search, mode: 'insensitive' } },
+        { email: { contains: params.search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (params?.role) {
+      where.role = params.role;
+    }
+
+    if (params?.status !== undefined) {
+      where.status = params.status;
+    }
+
+    const users = await this.prisma.user.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        avatar: true,
+        gender: true,
+        birthday: true,
+        address: true,
+        bio: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        // 不返回密码
+      },
+    });
+
+    return users;
+  }
+
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        avatar: true,
+        gender: true,
+        birthday: true,
+        address: true,
+        bio: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
+  }
+
+  async create(data: CreateUserDto) {
+    // 检查邮箱是否已存在
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
+
+    // 加密密码
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        password: hashedPassword,
+        role: data.role || 'STUDENT',
+        avatar: data.avatar,
+        gender: data.gender,
+        birthday: data.birthday ? new Date(data.birthday) : undefined,
+        address: data.address,
+        bio: data.bio,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        avatar: true,
+        gender: true,
+        birthday: true,
+        address: true,
+        bio: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return user;
+  }
+
+  async update(id: string, data: UpdateUserDto) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    // 如果是超级管理员，禁止修改角色
+    if (user.role === 'SUPER_ADMIN' && data.role && data.role !== 'SUPER_ADMIN') {
+      throw new ConflictException('Cannot change super admin role');
+    }
+
+    // 如果更新邮箱，检查是否已存在
+    if (data.email && data.email !== user.email) {
+      const existingUser = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      });
+
+      if (existingUser) {
+        throw new ConflictException('Email already exists');
+      }
+    }
+
+    const updateData: any = { ...data };
+
+    // 如果更新密码，需要加密
+    if (data.password) {
+      updateData.password = await bcrypt.hash(data.password, 10);
+    }
+
+    // 如果更新生日，转换为 Date 对象
+    if (data.birthday) {
+      updateData.birthday = new Date(data.birthday);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: updateData,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        avatar: true,
+        gender: true,
+        birthday: true,
+        address: true,
+        bio: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async remove(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    // 禁止删除超级管理员
+    if (user.role === 'SUPER_ADMIN') {
+      throw new ConflictException('Cannot delete super admin user');
+    }
+
+    await this.prisma.user.delete({ where: { id } });
+
+    return { message: 'User deleted successfully' };
+  }
+
+  async toggleStatus(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: { status: !user.status },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        avatar: true,
+        gender: true,
+        birthday: true,
+        address: true,
+        bio: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async getStats() {
+    const total = await this.prisma.user.count();
+    const active = await this.prisma.user.count({ where: { status: true } });
+    const byRole = await this.prisma.user.groupBy({
+      by: ['role'],
+      _count: true,
+    });
+
+    return {
+      total,
+      active,
+      inactive: total - active,
+      byRole: byRole.map((item) => ({
+        role: item.role,
+        count: item._count,
+      })),
+    };
+  }
+
+  async delete(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        role: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    // 防止删除超级管理员
+    if (user.role.key === 'SUPER_ADMIN') {
+      throw new ConflictException('Cannot delete super admin user');
+    }
+
+    await this.prisma.user.delete({
+      where: { id },
+    });
+
+    return { message: 'User deleted successfully' };
+  }
+
+  async toggleStatus(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        role: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    // 防止禁用超级管理员
+    if (user.role.key === 'SUPER_ADMIN') {
+      throw new ConflictException('Cannot disable super admin user');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: { status: !user.status },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        avatar: true,
+        gender: true,
+        birthday: true,
+        address: true,
+        bio: true,
+        roleId: true,
+        role: {
+          select: {
+            id: true,
+            name: true,
+            key: true,
+          },
+        },
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updatedUser;
+  }
+}
